@@ -22,9 +22,10 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
         // GET: api/Inscricoes
         [HttpGet]
-        public IEnumerable<Inscricao> GetInscricoes(DateTimeOffset? modified = null)
+        public IEnumerable<Inscricao> GetInscricoes(DateTimeOffset? alteracao = null)
         {
-            return _context.Inscricoes.Where(i => modified == null || i.UltimaModificacao > modified);
+            return _context.Inscricoes.Include(i => i.Dias)
+                .Where(i => alteracao == null || i.UltimaModificacao > alteracao);
         }
 
         // GET: api/Inscricoes/5
