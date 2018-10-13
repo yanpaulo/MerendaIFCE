@@ -1,5 +1,4 @@
-﻿using FluentScheduler;
-using MerendaIFCE.Sync.Models;
+﻿using MerendaIFCE.Sync.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MerendaIFCE.Sync.Schedule
 {
-    public class ConfirmacaoJob : IJob
+    public class ConfirmacaoJob
     {
         public void Execute()
         {
@@ -57,6 +56,7 @@ namespace MerendaIFCE.Sync.Schedule
 
                 try
                 {
+                    //TODO: Atualizar o ID Remoto
                     await ws.PostConfirmacoesAsync(listaSync);
                 }
                 catch (ApplicationException ex)

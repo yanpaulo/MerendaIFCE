@@ -8,8 +8,9 @@ namespace MerendaIFCE.Sync.LocalApp
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
+            await App.Current.InitAsync();
         }
     }
 }

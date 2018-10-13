@@ -28,11 +28,9 @@ namespace MerendaIFCE.Sync.Services
 
         private static void AtualizaInscricao(Inscricao inscricao)
         {
-            inscricao = Inscricao.ConverteRemota(inscricao);
-
             using (var db = new LocalDbContext())
             {
-                var local = db.Inscricoes.SingleOrDefault(i => i.IdRemoto == inscricao.IdRemoto);
+                var local = db.Inscricoes.SingleOrDefault(i => i.Id == inscricao.Id);
                 if (local != null)
                 {
                     db.Inscricoes.Remove(local);

@@ -9,7 +9,6 @@ namespace MerendaIFCE.Sync.Services
     {
         public static void Inicializa()
         {
-            ConfirmacaoRegistry.Registra();
         }
     }
 }

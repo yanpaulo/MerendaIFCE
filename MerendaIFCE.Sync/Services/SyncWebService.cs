@@ -19,13 +19,13 @@ namespace MerendaIFCE.Sync.Services
         {
             client = new HttpClient
             {
-                BaseAddress = new Uri("http://merenf.yan-soft.com/api")
+                BaseAddress = new Uri("http://localhost:7354/api/")
             };
         }
 
         public async Task<IList<Inscricao>> GetInscricoesAsync(DateTimeOffset? ultimaAlteracao = null)
         {
-            var response = await client.GetAsync($"Inscricoes?alteracao={ultimaAlteracao}");
+            var response = await client.GetAsync($"Inscricoes?alteracao={ultimaAlteracao?.ToString("o")}");
             var content = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
