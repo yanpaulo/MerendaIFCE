@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using AutoMapper;
+using MerendaIFCE.Sync.DTOs;
 
 namespace MerendaIFCE.Sync.Services
 {
@@ -28,10 +30,21 @@ namespace MerendaIFCE.Sync.Services
             if (response.IsSuccessStatusCode)
             {
                 var result = JsonConvert.DeserializeObject<List<Inscricao>>(content);
-                return result.Select(r => Inscricao.ConverteRemota(r)).ToList();
+                return result;
             }
 
-            throw new ApplicationException($"Erro no servidor ({response.StatusCode}): {content}");
+            throw new ApplicationException($"Erro ao obter inscrições do servidor ({response.StatusCode}): {content}");
+        }
+
+        public async Task PostConfirmacoesAsync(IEnumerable<Confirmacao> confirmacaos)
+        {
+            var list = Mapper.Map<List<ConfirmacaoDTO>>(confirmacaos);
+            var content = new StringContent(JsonConvert.SerializeObject(list), Encoding.UTF8, "application/json");
+            var response = await client.PostAsync("Confirmacoes", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ApplicationException($"Erro ao enviar confirmações para o servidor ({response.StatusCode}).");
+            }
         }
     }
 }

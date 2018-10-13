@@ -9,7 +9,7 @@ namespace MerendaIFCE.Sync.Schedule
     {
         private ConfirmacaoRegistry()
         {
-
+            Schedule<ConfirmacaoJob>().ToRunNow().AndEvery(5).Minutes();
         }
 
         public static void Registra()
