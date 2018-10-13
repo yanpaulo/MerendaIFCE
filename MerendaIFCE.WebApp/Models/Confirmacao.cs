@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MerendaIFCE.WebApp.Models
@@ -13,10 +13,7 @@ namespace MerendaIFCE.WebApp.Models
 
         public InscricaoDia InscricaoDia { get; set; }
 
-        //Ambos para se utilizar no app de SYNC!!
         public StatusConfirmacao StatusConfirmacao { get; set; }
-
-        public StatusEnvio StatusEnvio { get; set; }
     }
 
     public enum StatusConfirmacao
@@ -26,9 +23,9 @@ namespace MerendaIFCE.WebApp.Models
         Erro
     }
 
-    public enum StatusEnvio
+    public enum StatusSincronia
     {
-        Criado,
+        Modificado,
         Sincronizado,
         Erro
     }

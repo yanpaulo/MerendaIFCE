@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MerendaIFCE.WebApp.Models
 {
@@ -9,8 +9,12 @@ namespace MerendaIFCE.WebApp.Models
     {
         public int Id { get; set; }
 
-        public ICollection<InscricaoDia> Dias { get; set; }
+        [Required]
+        public string Matricula { get; set; }
+
+        public List<InscricaoDia> Dias { get; set; }
 
         public DateTimeOffset UltimaModificacao { get; set; }
+        
     }
 }

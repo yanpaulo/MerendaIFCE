@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace MerendaIFCE.WebApp.Models
 {
@@ -12,5 +13,8 @@ namespace MerendaIFCE.WebApp.Models
         public DayOfWeek Dia { get; set; }
 
         public int InscricaoId { get; set; }
+
+        [JsonIgnore]
+        public ICollection<Confirmacao> Confirmacoes { get; set; }
     }
 }

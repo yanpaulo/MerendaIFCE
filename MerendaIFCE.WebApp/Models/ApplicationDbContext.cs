@@ -1,19 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using MerendaIFCE.WebApp.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace MerendaIFCE.WebApp.Data
+namespace MerendaIFCE.WebApp.Models
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
+            : base(options) { }
+
+        public DbSet<Inscricao> Inscricoes { get; set; }
+
+        public DbSet<Confirmacao> Confirmacoes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
