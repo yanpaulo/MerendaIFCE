@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MerendaIFCE.WebApp.Models;
+using MerendaIFCE.WebApp.Services;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MerendaIFCE.WebApp.ApiControllers
 {
@@ -14,10 +16,12 @@ namespace MerendaIFCE.WebApp.ApiControllers
     public class InscricoesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHubContext<SyncHub> _hubContext;
 
-        public InscricoesController(ApplicationDbContext context)
+        public InscricoesController(ApplicationDbContext context, IHubContext<SyncHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         // GET: api/Inscricoes
@@ -66,6 +70,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
             try
             {
                 await _context.SaveChangesAsync();
+                await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, inscricao);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -93,6 +98,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
             _context.Inscricoes.Add(inscricao);
             await _context.SaveChangesAsync();
+            await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, inscricao);
 
             return CreatedAtAction("GetInscricao", new { id = inscricao.Id }, inscricao);
         }

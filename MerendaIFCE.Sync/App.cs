@@ -16,8 +16,9 @@ namespace MerendaIFCE.Sync
         {
             MappingConfigurations.Configure();
             await BancoDeDados.AtualizaAsync();
-            //Sincronizador.Inicializa();
+            await Sincronizador.InicializaAsync();
             //Agendamento.Inicializa();
+            Console.ReadKey();
         }
         
     }

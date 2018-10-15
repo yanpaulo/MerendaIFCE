@@ -10,19 +10,21 @@ namespace MerendaIFCE.Sync.Services
 {
     public class Sincronizador
     {
-        public static void Inicializa()
+        public static async Task InicializaAsync()
         {
             var connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:53353/Sync")
+                .WithUrl("http://localhost:7354/sync")
                 .Build();
 
-            connection.On<Inscricao>("Inscricao_Changed", AtualizaInscricao);
+            connection.On<Inscricao>("InscricaoChanged", AtualizaInscricao);
 
             connection.Closed += async error =>
             {
                 await Task.Delay(1000);
                 await connection.StartAsync();
             };
+
+            await connection.StartAsync();
 
         }
 

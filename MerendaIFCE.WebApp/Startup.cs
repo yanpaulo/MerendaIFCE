@@ -32,9 +32,11 @@ namespace MerendaIFCE.WebApp
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddSignalR();
+
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
-
+            
             services.AddMvc();
         }
 
@@ -55,6 +57,11 @@ namespace MerendaIFCE.WebApp
             app.UseStaticFiles();
 
             app.UseAuthentication();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<SyncHub>("/sync");
+            });
 
             app.UseMvc(routes =>
             {
