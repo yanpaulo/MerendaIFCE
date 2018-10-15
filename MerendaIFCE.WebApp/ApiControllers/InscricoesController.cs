@@ -65,24 +65,23 @@ namespace MerendaIFCE.WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(inscricao).State = EntityState.Modified;
+            var original = _context.Inscricoes.Include(i => i.Dias).SingleOrDefault(i => i.Id == inscricao.Id);
+            if (original == null)
+            {
+                return NotFound();
+            }
 
-            try
+            original.Matricula = inscricao.Matricula;
+            original.UltimaModificacao = DateTimeOffset.Now;
+
+            original.Dias = inscricao.Dias.Select(d => new InscricaoDia
             {
-                await _context.SaveChangesAsync();
-                await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, inscricao);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!InscricaoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                Dia = d.Dia
+            }).ToList();
+
+
+            await _context.SaveChangesAsync();
+            await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, inscricao);
 
             return NoContent();
         }
@@ -95,6 +94,12 @@ namespace MerendaIFCE.WebApp.ApiControllers
             {
                 return BadRequest(ModelState);
             }
+
+            inscricao.Id = 0;
+            inscricao.Dias = inscricao.Dias.Select(d => new InscricaoDia
+            {
+                Dia = d.Dia
+            }).ToList();
 
             _context.Inscricoes.Add(inscricao);
             await _context.SaveChangesAsync();
