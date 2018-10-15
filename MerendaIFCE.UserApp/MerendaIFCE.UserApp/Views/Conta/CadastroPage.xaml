@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MerendaIFCE.UserApp.Views.Conta.CadastroPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackLayout Grid.Row="1" IsEnabled="{Binding IsBusy,Converter={StaticResource NegatedValueConverter}}">
+            <StackLayout>
+                <Label Text="Email"></Label>
+                <Entry Text="{Binding Email.Value}"></Entry>
+                <Label Text="{Binding Email.PrimaryValidationMessage}" IsVisible="{Binding Email.HasError}" TextColor="Red"></Label>
+            </StackLayout>
+
+            <StackLayout>
+                <Label Text="Matrícula"></Label>
+                <Entry Text="{Binding Matricula.Value}"></Entry>
+                <Label Text="{Binding Matricula.PrimaryValidationMessage}" IsVisible="{Binding Matricula.HasError}" TextColor="Red"></Label>
+            </StackLayout>
+
+            <StackLayout>
+                <Label Text="Senha"></Label>
+                <Entry Text="{Binding Senha.Value}"></Entry>
+                <Label Text="{Binding Senha.PrimaryValidationMessage}" IsVisible="{Binding Senha.HasError}" TextColor="Red"></Label>
+            </StackLayout>
+
+            <StackLayout>
+                <Label Text="Confirmar Senha"></Label>
+                <Entry Text="{Binding ConfirmarSenha.Value}"></Entry>
+                <Label Text="{Binding ConfirmarSenha.PrimaryValidationMessage}" IsVisible="{Binding ConfirmarSenha.HasError}" TextColor="Red"></Label>
+            </StackLayout>
+
+            <StackLayout>
+                <Button Text="Cadastrar" Clicked="Button_Clicked"></Button>
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"></ActivityIndicator>
+            </StackLayout>
+        </StackLayout>
+    </Grid>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Cancelar"></ToolbarItem>
+    </ContentPage.ToolbarItems>
+</ContentPage>
