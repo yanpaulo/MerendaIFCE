@@ -35,7 +35,8 @@ namespace MerendaIFCE.UserApp.Views.Conta
                 using (var db = new UserAppDbContext())
                 using (var ws = new WebService())
                 {
-                    await ws.CadastraAsync(AsCadastro());
+                    var usuario = await ws.CadastraAsync(AsCadastro());
+                    App.Current.Usuario = usuario;
                 }
             }
         }

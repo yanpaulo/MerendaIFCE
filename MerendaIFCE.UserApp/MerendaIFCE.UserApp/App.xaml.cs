@@ -5,27 +5,38 @@ using Xamarin.Forms.Xaml;
 using MerendaIFCE.UserApp.Views.Conta;
 using MerendaIFCE.UserApp.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Compile)]
 namespace MerendaIFCE.UserApp
 {
 	public partial class App : Application
 	{
-		public App ()
+
+        public static new App Current => Application.Current as App;
+
+        public App ()
 		{
-			InitializeComponent();
-
-
-            MainPage = new CadastroPage();
-		}
+            InitializeComponent();
+            MainPage = new RootPage();
+        }
 
 		protected override void OnStart ()
 		{
             using (var db = new UserAppDbContext())
             {
-                db.Database.Migrate();
+                db.Database.EnsureCreated();
+                usuario = db.Usuarios.SingleOrDefault();
+                if (Usuario == null)
+                {
+                    MainPage = new LoginPage();
+                }
+                else
+                {
+                    MainPage = new RootPage();
+                }
             }
-		}
+        }
 
 		protected override void OnSleep ()
 		{
@@ -36,5 +47,7 @@ namespace MerendaIFCE.UserApp
 		{
 			// Handle when your app resumes
 		}
-	}
+
+        
+    }
 }

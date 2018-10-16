@@ -18,25 +18,25 @@
 
             <StackLayout>
                 <Label Text="Matrícula"></Label>
-                <Entry Text="{Binding Matricula.Value}"></Entry>
+                <Entry Text="{Binding Matricula.Value}" MaxLength="14" Keyboard="Numeric"></Entry>
                 <Label Text="{Binding Matricula.PrimaryValidationMessage}" IsVisible="{Binding Matricula.HasError}" TextColor="Red"></Label>
             </StackLayout>
 
             <StackLayout>
                 <Label Text="Senha"></Label>
-                <Entry Text="{Binding Senha.Value}"></Entry>
+                <Entry Text="{Binding Senha.Value}" IsPassword="True"></Entry>
                 <Label Text="{Binding Senha.PrimaryValidationMessage}" IsVisible="{Binding Senha.HasError}" TextColor="Red"></Label>
             </StackLayout>
 
             <StackLayout>
                 <Label Text="Confirmar Senha"></Label>
-                <Entry Text="{Binding ConfirmarSenha.Value}"></Entry>
+                <Entry Text="{Binding ConfirmarSenha.Value}" IsPassword="True"></Entry>
                 <Label Text="{Binding ConfirmarSenha.PrimaryValidationMessage}" IsVisible="{Binding ConfirmarSenha.HasError}" TextColor="Red"></Label>
             </StackLayout>
 
             <StackLayout>
-                <Button Text="Cadastrar" Clicked="Button_Clicked"></Button>
                 <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"></ActivityIndicator>
+                <Button Text="Cadastrar" Clicked="Button_Clicked"></Button>
             </StackLayout>
         </StackLayout>
     </Grid>

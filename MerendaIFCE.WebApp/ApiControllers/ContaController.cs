@@ -34,7 +34,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> LoginAsync(LoginViewModel model)
+        public async Task<IActionResult> LoginAsync([FromBody]LoginViewModel model)
         {
             var user = context.Users.Include(u => u.Inscricao)
                 .SingleOrDefault(u => u.UserName == model.UserName || u.Inscricao.Matricula == model.UserName);

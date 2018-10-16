@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MerendaIFCE.UserApp.Views.Conta.LoginPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackLayout Grid.Row="1" IsEnabled="{Binding IsBusy,Converter={StaticResource NegatedValueConverter}}">
+            <StackLayout>
+                <Label Text="Email ou Matrícula"></Label>
+                <Entry Text="{Binding Login.Value}"></Entry>
+                <Label Text="{Binding Login.PrimaryValidationMessage}" IsVisible="{Binding Login.HasError}" TextColor="Red"></Label>
+            </StackLayout>
+
+            <StackLayout>
+                <Label Text="Senha"></Label>
+                <Entry Text="{Binding Senha.Value}" IsPassword="True"></Entry>
+                <Label Text="{Binding Senha.PrimaryValidationMessage}" IsVisible="{Binding Senha.HasError}" TextColor="Red"></Label>
+            </StackLayout>
+
+            <StackLayout>
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"></ActivityIndicator>
+                <Button Text="Login" Clicked="LoginButton_Clicked"></Button>
+                <Button Text="Cadastrar" Clicked="CadastroButton_Clicked"></Button>
+            </StackLayout>
+        </StackLayout>
+    </Grid>
+</ContentPage>
