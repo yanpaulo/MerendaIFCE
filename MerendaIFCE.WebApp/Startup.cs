@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MerendaIFCE.WebApp.Models;
 using MerendaIFCE.WebApp.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace MerendaIFCE.WebApp
 {
@@ -32,7 +34,38 @@ namespace MerendaIFCE.WebApp
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            var tokenConfigurations = new TokenConfigurations();
+            services.AddSingleton(tokenConfigurations);
+
+            services.AddAuthentication()
+                .AddJwtBearer(bearerOptions =>
+                {
+                    bearerOptions.TokenValidationParameters = tokenConfigurations.TokenValidationParameters;
+                });
+
+            services.AddAuthorization(auth =>
+            {
+                var bearer = new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser().Build();
+
+                auth.AddPolicy("Bearer", bearer);
+                //auth.DefaultPolicy = bearer;
+            });
+
             services.AddSignalR();
+
+            services.Configure<IdentityOptions>(opt =>
+            {
+                opt.Password = new PasswordOptions
+                {
+                    RequireDigit = false,
+                    RequiredLength = 6,
+                    RequireLowercase = false,
+                    RequireNonAlphanumeric = false,
+                    RequireUppercase = false
+                };
+            });
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
