@@ -22,7 +22,14 @@ namespace MerendaIFCE.UserApp.Models
             modelBuilder.Entity<Usuario>()
                 .HasOne(u => u.Inscricao)
                 .WithOne()
-                .HasForeignKey<Inscricao>("UsuarioId");
+                .HasForeignKey<Inscricao>("UsuarioId")
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Inscricao>()
+                .HasMany(i => i.Confirmacoes)
+                .WithOne()
+                .HasForeignKey(c => c.InscricaoId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }

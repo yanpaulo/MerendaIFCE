@@ -25,7 +25,6 @@ namespace MerendaIFCE.UserApp
             {
                 if (db.Usuarios.Any())
                 {
-                    db.Inscricoes.RemoveRange(db.Inscricoes.ToList());
                     db.Usuarios.RemoveRange(db.Usuarios.ToList());
                 }
                 if (value != null)
