@@ -32,6 +32,13 @@ namespace MerendaIFCE.WebApp.ApiControllers
                 .Where(i => alteracao == null || i.UltimaModificacao > alteracao);
         }
 
+        [HttpGet("{id}/confirmacoes")]
+        public IEnumerable<Confirmacao> GetConfirmacoes(int id, DateTimeOffset? alteracao = null)
+        {
+            return _context.Confirmacoes
+                .Where(c => c.InscricaoId == id && (alteracao == null || c.UltimaModificacao > alteracao));
+        }
+
         // GET: api/Inscricoes/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetInscricao([FromRoute] int id)

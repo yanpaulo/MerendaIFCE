@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace MerendaIFCE.WebApp.Models
 {
@@ -15,6 +16,9 @@ namespace MerendaIFCE.WebApp.Models
         public List<InscricaoDia> Dias { get; set; }
 
         public DateTimeOffset UltimaModificacao { get; set; }
-        
+
+        [JsonIgnore]
+        public ICollection<Confirmacao> Confirmacoes { get; set; }
+
     }
 }

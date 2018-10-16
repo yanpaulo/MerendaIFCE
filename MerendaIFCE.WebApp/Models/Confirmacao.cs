@@ -11,22 +11,17 @@ namespace MerendaIFCE.WebApp.Models
 
         public DateTimeOffset Dia { get; set; }
 
-        public InscricaoDia InscricaoDia { get; set; }
+        public DateTimeOffset UltimaModificacao { get; set; }
 
         public StatusConfirmacao StatusConfirmacao { get; set; }
+
+        public int InscricaoId { get; set; }
     }
 
     public enum StatusConfirmacao
     {
         NaoConfirmado,
         Confirmado,
-        Erro
-    }
-
-    public enum StatusSincronia
-    {
-        Modificado,
-        Sincronizado,
         Erro
     }
 }

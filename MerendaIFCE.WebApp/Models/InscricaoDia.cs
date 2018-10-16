@@ -13,8 +13,5 @@ namespace MerendaIFCE.WebApp.Models
         public DayOfWeek Dia { get; set; }
 
         public int InscricaoId { get; set; }
-
-        [JsonIgnore]
-        public ICollection<Confirmacao> Confirmacoes { get; set; }
     }
 }
