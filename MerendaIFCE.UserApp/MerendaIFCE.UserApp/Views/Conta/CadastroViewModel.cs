@@ -32,20 +32,21 @@ namespace MerendaIFCE.UserApp.Views.Conta
             if (Validate())
             {
                 using (BusyState())
+                using (var db = new UserAppDbContext())
+                using (var ws = new WebService())
                 {
-
-                    var ws = new WebService();
                     await ws.CadastraAsync(AsCadastro());
-                } 
+                }
             }
         }
 
         public Cadastro AsCadastro() =>
             new Cadastro
             {
-                Login = Email.Value,
+                Email = Email.Value,
                 Matricula = Matricula.Value,
-                Senha = Senha.Value
+                Senha = Senha.Value,
+                ConfirmarSenha = ConfirmarSenha.Value
             };
 
 

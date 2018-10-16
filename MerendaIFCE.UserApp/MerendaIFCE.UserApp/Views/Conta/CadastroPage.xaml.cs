@@ -22,7 +22,16 @@ namespace MerendaIFCE.UserApp.Views.Conta
 
         private async void Button_Clicked(object sender, EventArgs e)
         {
-            await viewModel.CadastraAsync();
+            try
+            {
+                await viewModel.CadastraAsync();
+                var root = new RootPage();
+                App.Current.MainPage = root;
+            }
+            catch (AppException ex)
+            {
+                await ex.HandleAsync(this);
+            }
         }
     }
 }

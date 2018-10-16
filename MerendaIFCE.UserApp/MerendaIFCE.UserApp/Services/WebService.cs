@@ -1,4 +1,5 @@
-﻿using MerendaIFCE.UserApp.Models;
+﻿using MerendaIFCE.UserApp.Exceptions;
+using MerendaIFCE.UserApp.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MerendaIFCE.UserApp.Services
 {
-    public class WebService
+    public class WebService : IDisposable
     {
         private const string JsonContentType = "application/json";
         private HttpClient client = new HttpClient
@@ -16,15 +17,23 @@ namespace MerendaIFCE.UserApp.Services
             BaseAddress = new Uri("http://localhost:7354/api/")
         };
 
-        public async Task CadastraAsync(Cadastro cadastro)
+        public async Task<Usuario> CadastraAsync(Cadastro cadastro)
         {
             var content = new StringContent(JsonConvert.SerializeObject(cadastro), Encoding.UTF8, JsonContentType);
-            var response = await client.PostAsync("Register", content);
-            if (!response.IsSuccessStatusCode)
+            var response = await client.PostAsync("Conta/Cadastro", content);
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadAsStringAsync();
-                
+                var usuario = JsonConvert.DeserializeObject<Usuario>(result);
+                return usuario;
             }
+
+            throw new ServerException(result, response.StatusCode);
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

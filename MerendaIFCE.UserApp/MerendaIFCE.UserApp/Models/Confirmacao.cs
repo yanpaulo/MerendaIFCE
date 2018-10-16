@@ -1,23 +1,29 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MerendaIFCE.UserApp.Models
 {
-    public class Inscricao
+    public class Confirmacao
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
-        [Required]
-        public string Matricula { get; set; }
-
-        public List<InscricaoDia> Dias { get; set; }
+        public DateTimeOffset Dia { get; set; }
 
         public DateTimeOffset UltimaModificacao { get; set; }
 
-        public ICollection<Confirmacao> Confirmacoes { get; set; }
+        public StatusConfirmacao StatusConfirmacao { get; set; }
+
+        public int InscricaoId { get; set; }
+    }
+
+    public enum StatusConfirmacao
+    {
+        NaoConfirmado,
+        Confirmado,
+        Erro
     }
 }

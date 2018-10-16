@@ -6,10 +6,12 @@ namespace MerendaIFCE.UserApp.Models
 {
     public class Cadastro
     {
-        public string Login { get; set; }
+        public string Email { get; set; }
 
         public string Matricula { get; set; }
 
         public string Senha { get; set; }
+
+        public string ConfirmarSenha { get; set; }
     }
 }

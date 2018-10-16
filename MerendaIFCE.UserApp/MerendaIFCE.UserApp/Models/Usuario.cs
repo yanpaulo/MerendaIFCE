@@ -6,9 +6,9 @@ namespace MerendaIFCE.UserApp.Models
 {
     public class Usuario
     {
-        public string Email { get; set; }
+        public int Id { get; set; }
 
-        public string Matricula { get; set; }
+        public string Email { get; set; }
 
         public string Token { get; set; }
 

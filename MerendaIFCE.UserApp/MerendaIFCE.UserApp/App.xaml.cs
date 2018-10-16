@@ -3,6 +3,8 @@ using Xamarin.Forms;
 using MerendaIFCE.UserApp.Views;
 using Xamarin.Forms.Xaml;
 using MerendaIFCE.UserApp.Views.Conta;
+using MerendaIFCE.UserApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Compile)]
 namespace MerendaIFCE.UserApp
@@ -19,7 +21,10 @@ namespace MerendaIFCE.UserApp
 
 		protected override void OnStart ()
 		{
-			// Handle when your app starts
+            using (var db = new UserAppDbContext())
+            {
+                db.Database.Migrate();
+            }
 		}
 
 		protected override void OnSleep ()
