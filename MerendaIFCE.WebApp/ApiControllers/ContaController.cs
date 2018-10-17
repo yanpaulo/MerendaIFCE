@@ -139,7 +139,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
             {
                 Issuer = tokenConfigurations.Issuer,
                 Audience = tokenConfigurations.Audience,
-                Expires = now.AddHours(2),
+                Expires = now.AddMonths(1),
                 IssuedAt = now,
                 SigningCredentials = tokenConfigurations.SigningCredentials,
                 Subject = identity,
