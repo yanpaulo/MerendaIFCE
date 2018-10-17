@@ -1,11 +1,8 @@
 ﻿using System;
-using Xamarin.Forms;
-using MerendaIFCE.UserApp.Views;
-using Xamarin.Forms.Xaml;
-using MerendaIFCE.UserApp.Views.Conta;
-using MerendaIFCE.UserApp.Models;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+using MerendaIFCE.UserApp.Models;
 
 namespace MerendaIFCE.UserApp
 {
@@ -19,21 +16,11 @@ namespace MerendaIFCE.UserApp
             set { SetUsuario(value); }
         }
 
-        private void SetUsuario(Usuario value)
+        private void SetUsuario(Usuario usuario)
         {
-            using (var db = new UserAppDbContext())
-            {
-                if (db.Usuarios.Any())
-                {
-                    db.Usuarios.RemoveRange(db.Usuarios.ToList());
-                }
-                if (value != null)
-                {
-                    db.Usuarios.Add(value); 
-                }
-                db.SaveChanges();
-                usuario = value;
-            }
+            var db = AppDbContext.Instance;
+            db.SetUsuario(usuario);
+            this.usuario = usuario;
         }
     }
 }

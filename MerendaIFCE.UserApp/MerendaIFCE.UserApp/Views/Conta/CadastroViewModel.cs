@@ -32,7 +32,6 @@ namespace MerendaIFCE.UserApp.Views.Conta
             if (Validate())
             {
                 using (BusyState())
-                using (var db = new UserAppDbContext())
                 using (var ws = new WebService())
                 {
                     var usuario = await ws.CadastraAsync(AsCadastro());

@@ -37,6 +37,11 @@ namespace MerendaIFCE.UserApp.Services
             return await EnviaAsync<Usuario>(cadastro, "Conta/Cadastro", client.PostAsync);
         }
 
+        public async Task<Inscricao> PutInscricaoDiasAsync(Inscricao inscricao)
+        {
+            return await EnviaAsync<Inscricao>(inscricao, $"Inscricoes/{inscricao?.Id}", client.PutAsync);
+        }
+
         public async Task<T> EnviaAsync<T>(object item, string url, Func<string, HttpContent, Task<HttpResponseMessage>> method )
         {
             var content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, JsonContentType);

@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations.Schema;
+using SQLite;
 
 namespace MerendaIFCE.UserApp.Models
 {
     public class Confirmacao
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [PrimaryKey]
         public int Id { get; set; }
 
         public DateTimeOffset Dia { get; set; }
