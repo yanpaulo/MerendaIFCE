@@ -24,6 +24,55 @@ namespace MerendaIFCE.WebApp.ApiControllers
             _hubContext = hubContext;
         }
 
+        [HttpPost("{id}/Dias")]
+        public async Task<IActionResult> PostInscricaoDia(int id, [FromBody]InscricaoDia dia)
+        {
+            var user = GetUser();
+            if (id != dia.InscricaoId)
+            {
+                ModelState.AddModelError(nameof(InscricaoDia.InscricaoId), "InscricaoId diferente do especificado na URL");
+            }
+            if (user.Inscricao.Id != id)
+            {
+                ModelState.AddModelError(nameof(InscricaoDia.InscricaoId), "Não é possível alterar a inscrição de outro usuário, espertinho.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.InscricaoDias.Add(dia);
+                _context.SaveChanges();
+                await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, user.Inscricao);
+
+                return Ok(dia);
+            }
+
+            return BadRequest(ModelState);
+        }
+
+        [HttpDelete("{idInscricao}/Dias/{idDia}")]
+        public async Task<IActionResult> DeleteInscricaoDia(int idInscricao, int idDia)
+        {
+            var user = GetUser();
+            if (user.Inscricao.Id != idInscricao)
+            {
+                ModelState.AddModelError("", "Não é possível alterar a inscrição de outro usuário, espertinho.");
+            }
+            if (!user.Inscricao.Dias.Any(d => d.Id == idDia))
+            {
+                ModelState.AddModelError("", "Dia não encontrado.");
+            }
+            if (ModelState.IsValid)
+            {
+                _context.InscricaoDias.Remove(user.Inscricao.Dias.Single(d => d.Id == idDia));
+                _context.SaveChanges();
+                await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, user.Inscricao);
+
+                return Ok();
+            }
+
+            return BadRequest(ModelState);
+        }
+
         // GET: api/Inscricoes
         [HttpGet]
         public IEnumerable<Inscricao> GetInscricoes(DateTimeOffset? alteracao = null)
@@ -32,7 +81,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                 .Where(i => alteracao == null || i.UltimaModificacao > alteracao);
         }
 
-        [HttpGet("{id}/confirmacoes")]
+        [HttpGet("{id}/Confirmacoes")]
         public IEnumerable<Confirmacao> GetConfirmacoes(int id, DateTimeOffset? alteracao = null)
         {
             return _context.Confirmacoes
@@ -58,8 +107,9 @@ namespace MerendaIFCE.WebApp.ApiControllers
             return Ok(inscricao);
         }
 
+        #region NonAction
         // PUT: api/Inscricoes/5
-        [HttpPut("{id}")]
+        [NonAction]
         public async Task<IActionResult> PutInscricao([FromRoute] int id, [FromBody] Inscricao inscricao)
         {
             if (!ModelState.IsValid)
@@ -95,6 +145,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
         // POST: api/Inscricoes
         [HttpPost]
+        [NonAction]
         public async Task<IActionResult> PostInscricao([FromBody] Inscricao inscricao)
         {
             if (!ModelState.IsValid)
@@ -117,6 +168,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
         // DELETE: api/Inscricoes/5
         [HttpDelete("{id}")]
+        [NonAction]
         public async Task<IActionResult> DeleteInscricao([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -136,9 +188,18 @@ namespace MerendaIFCE.WebApp.ApiControllers
             return Ok(inscricao);
         }
 
+        #endregion
+
         private bool InscricaoExists(int id)
         {
             return _context.Inscricoes.Any(e => e.Id == id);
+        }
+
+        private ApplicationUser GetUser()
+        {
+            var username = User.Identity.Name;
+            var user = _context.Users.Include(u => u.Inscricao).Single(u => u.UserName == username);
+            return user;
         }
     }
 }

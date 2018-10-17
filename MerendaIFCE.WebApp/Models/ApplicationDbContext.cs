@@ -14,6 +14,8 @@ namespace MerendaIFCE.WebApp.Models
 
         public DbSet<Inscricao> Inscricoes { get; set; }
 
+        public DbSet<InscricaoDia> InscricaoDias { get; set; }
+
         public DbSet<Confirmacao> Confirmacoes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
