@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using MerendaIFCE.WebApp.Models;
 using MerendaIFCE.WebApp.Services;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MerendaIFCE.WebApp.ApiControllers
 {
@@ -25,6 +26,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
         }
 
         [HttpPost("{id}/Dias")]
+        [Authorize("Bearer")]
         public async Task<IActionResult> PostInscricaoDia(int id, [FromBody]InscricaoDia dia)
         {
             var user = GetUser();
@@ -39,9 +41,14 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
             if (ModelState.IsValid)
             {
-                _context.InscricaoDias.Add(dia);
-                _context.SaveChanges();
-                await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, user.Inscricao);
+                if (!user.Inscricao.Dias.Any(d => d.Dia == dia.Dia))
+                {
+                    _context.InscricaoDias.Add(dia);
+                    _context.SaveChanges();
+                    await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, user.Inscricao);
+
+                    return Created($"{user.Inscricao.Id}/Dias/{dia.Id}", dia);
+                }
 
                 return Ok(dia);
             }
@@ -50,6 +57,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
         }
 
         [HttpDelete("{idInscricao}/Dias/{idDia}")]
+        [Authorize("Bearer")]
         public async Task<IActionResult> DeleteInscricaoDia(int idInscricao, int idDia)
         {
             var user = GetUser();
@@ -57,15 +65,14 @@ namespace MerendaIFCE.WebApp.ApiControllers
             {
                 ModelState.AddModelError("", "Não é possível alterar a inscrição de outro usuário, espertinho.");
             }
-            if (!user.Inscricao.Dias.Any(d => d.Id == idDia))
-            {
-                ModelState.AddModelError("", "Dia não encontrado.");
-            }
             if (ModelState.IsValid)
             {
-                _context.InscricaoDias.Remove(user.Inscricao.Dias.Single(d => d.Id == idDia));
-                _context.SaveChanges();
-                await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, user.Inscricao);
+                if (user.Inscricao.Dias.Any(d => d.Id == idDia))
+                {
+                    _context.InscricaoDias.Remove(user.Inscricao.Dias.Single(d => d.Id == idDia));
+                    _context.SaveChanges();
+                    await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, user.Inscricao); 
+                }
 
                 return Ok();
             }
@@ -198,7 +205,10 @@ namespace MerendaIFCE.WebApp.ApiControllers
         private ApplicationUser GetUser()
         {
             var username = User.Identity.Name;
-            var user = _context.Users.Include(u => u.Inscricao).Single(u => u.UserName == username);
+            var user = _context.Users
+                .Include(u => u.Inscricao)
+                    .ThenInclude(i => i.Dias)
+                .Single(u => u.UserName == username);
             return user;
         }
     }

@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace MerendaIFCE.UserApp.Views.Confirmacoes
+namespace MerendaIFCE.UserApp.Views.Main
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ConfirmacoesView : ContentPage
 	{
 		public ConfirmacoesView ()
 		{
-			InitializeComponent ();
+			InitializeComponent();
 		}
 	}
 }

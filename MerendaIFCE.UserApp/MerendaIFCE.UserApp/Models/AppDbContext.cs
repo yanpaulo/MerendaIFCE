@@ -67,7 +67,16 @@ namespace MerendaIFCE.UserApp.Models
             }
         }
 
+        public void InsertDia(InscricaoDia dia)
+        {
+            db.Table<InscricaoDia>().Delete(i => i.InscricaoId == i.InscricaoId && i.Dia == dia.Dia);
+            db.Insert(dia);
+        }
 
+        public void DeleteDia(InscricaoDia dia)
+        {
+            db.Delete(dia);
+        }
 
 
 

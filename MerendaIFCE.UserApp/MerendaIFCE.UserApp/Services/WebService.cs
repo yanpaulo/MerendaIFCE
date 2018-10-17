@@ -37,9 +37,14 @@ namespace MerendaIFCE.UserApp.Services
             return await EnviaAsync<Usuario>(cadastro, "Conta/Cadastro", client.PostAsync);
         }
 
-        public async Task<Inscricao> PutInscricaoDiasAsync(Inscricao inscricao)
+        public async Task<InscricaoDia> PostDiaAsync(InscricaoDia dia)
         {
-            return await EnviaAsync<Inscricao>(inscricao, $"Inscricoes/{inscricao?.Id}", client.PutAsync);
+            return await EnviaAsync<InscricaoDia>(dia, $"Inscricoes/{dia.InscricaoId}/Dias", client.PostAsync);
+        }
+
+        public async Task DeleteDiaAsync(InscricaoDia dia)
+        {
+            await EnviaAsync<InscricaoDia>(dia, $"Inscricoes/{dia.InscricaoId}/Dias/{dia.Id}", async (url, content) => await client.DeleteAsync(url));
         }
 
         public async Task<T> EnviaAsync<T>(object item, string url, Func<string, HttpContent, Task<HttpResponseMessage>> method )
@@ -55,6 +60,10 @@ namespace MerendaIFCE.UserApp.Services
 
             throw new ServerException(result, response.StatusCode);
         }
+
+       
+
+        
 
         public void Dispose()
         {
