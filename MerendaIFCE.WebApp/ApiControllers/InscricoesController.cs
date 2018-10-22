@@ -25,6 +25,34 @@ namespace MerendaIFCE.WebApp.ApiControllers
             _hubContext = hubContext;
         }
 
+        // GET: api/Inscricoes
+        [HttpGet]
+        public IEnumerable<Inscricao> GetInscricoes(DateTimeOffset? alteracao = null)
+        {
+            return _context.Inscricoes.Include(i => i.Dias)
+                .Where(i => alteracao == null || i.UltimaModificacao > alteracao);
+        }
+
+
+        // GET: api/Inscricoes/5
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetInscricao([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var inscricao = await _context.Inscricoes.SingleOrDefaultAsync(m => m.Id == id);
+
+            if (inscricao == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(inscricao);
+        }
+
         [HttpPost("{id}/Dias")]
         [Authorize("Bearer")]
         public async Task<IActionResult> PostInscricaoDia(int id, [FromBody]InscricaoDia dia)
@@ -86,40 +114,14 @@ namespace MerendaIFCE.WebApp.ApiControllers
             return BadRequest(ModelState);
         }
 
-        // GET: api/Inscricoes
-        [HttpGet]
-        public IEnumerable<Inscricao> GetInscricoes(DateTimeOffset? alteracao = null)
-        {
-            return _context.Inscricoes.Include(i => i.Dias)
-                .Where(i => alteracao == null || i.UltimaModificacao > alteracao);
-        }
-
+        
         [HttpGet("{id}/Confirmacoes")]
         public IEnumerable<Confirmacao> GetConfirmacoes(int id, DateTimeOffset? alteracao = null)
         {
             return _context.Confirmacoes
                 .Where(c => c.InscricaoId == id && (alteracao == null || c.UltimaModificacao > alteracao));
         }
-
-        // GET: api/Inscricoes/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetInscricao([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var inscricao = await _context.Inscricoes.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (inscricao == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(inscricao);
-        }
-
+        
         #region NonAction
         // PUT: api/Inscricoes/5
         [NonAction]
