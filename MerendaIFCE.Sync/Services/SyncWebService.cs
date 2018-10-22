@@ -38,10 +38,29 @@ namespace MerendaIFCE.Sync.Services
             throw new ApplicationException($"Erro ao obter inscrições do servidor ({response.StatusCode}): {content}");
         }
 
+        public async Task<IList<Confirmacao>> GetConfirmacoesAsync(DateTimeOffset? ultimaAlteracao = null)
+        {
+            var list = await EnviaAsync<List<ConfirmacaoDTO>>($"Confirmacoes?alteracao={ultimaAlteracao?.ToString("o")}", client.GetAsync);
+            return Mapper.Map<List<Confirmacao>>(list);
+        }
+
         public async Task<IList<ConfirmacaoDTO>> PostConfirmacoesAsync(IEnumerable<Confirmacao> confirmacaos)
         {
             var list = Mapper.Map<List<ConfirmacaoDTO>>(confirmacaos);
             return await EnviaAsync<IList<ConfirmacaoDTO>>(list, "Confirmacoes", client.PostAsync);
+        }
+
+        public async Task<T> EnviaAsync<T>(string url, Func<string, Task<HttpResponseMessage>> method)
+        {
+            var response = await method(url);
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                var ret = JsonConvert.DeserializeObject<T>(result);
+                return ret;
+            }
+
+            throw new ApplicationException($"Erro de servidor ({response.StatusCode}): {result}");
         }
 
         public async Task<T> EnviaAsync<T>(object item, string url, Func<string, HttpContent, Task<HttpResponseMessage>> method)

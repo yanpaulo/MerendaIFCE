@@ -15,5 +15,7 @@ namespace MerendaIFCE.Sync.DTOs
         public int InscricaoId { get; set; }
 
         public StatusConfirmacao StatusConfirmacao { get; set; }
+
+        public DateTimeOffset? UltimaModificacao { get; set; }
     }
 }

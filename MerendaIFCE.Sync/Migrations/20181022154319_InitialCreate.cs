@@ -27,6 +27,7 @@ namespace MerendaIFCE.Sync.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     IdRemoto = table.Column<int>(nullable: true),
+                    UltimaModificacao = table.Column<DateTimeOffset>(nullable: true),
                     Dia = table.Column<DateTimeOffset>(nullable: false),
                     StatusConfirmacao = table.Column<int>(nullable: false),
                     StatusSincronia = table.Column<int>(nullable: false),

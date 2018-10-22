@@ -17,21 +17,45 @@ namespace MerendaIFCE.Sync.Services
                 db.Database.Migrate();
 
                 var ws = new SyncWebService();
-                var last = db.Inscricoes.OrderByDescending(i => i.UltimaModificacao).FirstOrDefault()?.UltimaModificacao;
-                var alteracoes = await ws.GetInscricoesAsync(last);
-                foreach (var remoto in alteracoes)
-                {
-                    var local = db.Inscricoes.Include(l => l.Dias).SingleOrDefault(i => i.Id == remoto.Id);
-                    if (local != null)
-                    {
-                        db.Inscricoes.Remove(local);
-                        db.InscricaoDias.RemoveRange(local.Dias);
-                    }
-
-                    db.Inscricoes.Add(remoto);
-                }
+                await AtualizaInscricoes(db, ws);
+                await AtualizaConfirmacoes(db, ws);
 
                 db.SaveChanges();
+            }
+        }
+
+        private static async Task AtualizaInscricoes(LocalDbContext db, SyncWebService ws)
+        {
+            var ultima = db.Inscricoes.OrderByDescending(i => i.UltimaModificacao).FirstOrDefault()?.UltimaModificacao;
+
+            var alteracoes = await ws.GetInscricoesAsync(ultima);
+            foreach (var remoto in alteracoes)
+            {
+                var local = db.Inscricoes.SingleOrDefault(i => i.Id == remoto.Id);
+                if (local != null)
+                {
+                    db.Inscricoes.Remove(local);
+                }
+
+                db.Inscricoes.Add(remoto);
+            }
+        }
+
+        private static async Task AtualizaConfirmacoes(LocalDbContext db, SyncWebService ws)
+        {
+            var ultima = db.Confirmacoes.OrderByDescending(i => i.UltimaModificacao).FirstOrDefault()?.UltimaModificacao;
+
+            var alteracoes = await ws.GetConfirmacoesAsync(ultima);
+            foreach (var remoto in alteracoes)
+            {
+                var local = db.Confirmacoes.SingleOrDefault(i => i.IdRemoto == remoto.Id);
+                if (local != null)
+                {
+                    db.Confirmacoes.Remove(local);
+                }
+
+                remoto.StatusSincronia = StatusSincronia.Sincronizado;
+                db.Confirmacoes.Add(remoto);
             }
         }
     }

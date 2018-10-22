@@ -11,9 +11,15 @@ namespace MerendaIFCE.Sync.Configurations
     {
         public static void Configure()
         {
-            Mapper.Initialize(cfg => 
+            Mapper.Initialize(cfg =>
+            {
                 cfg.CreateMap<Confirmacao, ConfirmacaoDTO>()
-                    .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdRemoto)));
+                    .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdRemoto));
+
+                cfg.CreateMap<ConfirmacaoDTO, Confirmacao>()
+                    .ForMember(dest => dest.IdRemoto, opt => opt.MapFrom(src => src.Id));
+
+            });
         }
     }
 }

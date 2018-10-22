@@ -11,6 +11,8 @@ namespace MerendaIFCE.Sync.Models
 
         public int? IdRemoto { get; set; }
 
+        public DateTimeOffset? UltimaModificacao { get; set; }
+
         public DateTimeOffset Dia { get; set; }
 
         public Inscricao Inscricao { get; set; }

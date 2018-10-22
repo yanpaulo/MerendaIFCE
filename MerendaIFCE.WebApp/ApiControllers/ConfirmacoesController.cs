@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MerendaIFCE.WebApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MerendaIFCE.WebApp.ApiControllers
 {
@@ -20,6 +21,17 @@ namespace MerendaIFCE.WebApp.ApiControllers
             this.db = db;
         }
 
+        [HttpGet]
+        public IEnumerable<Confirmacao> GetConfirmacoes([FromQuery]DateTimeOffset? alteracao = null)
+        {
+            var semana = DateTimeOffset.Now - TimeSpan.FromDays(7);
+
+            return db.Confirmacoes
+                .Where(c => c.UltimaModificacao >= semana && (alteracao == null || c.UltimaModificacao > alteracao))
+                .OrderByDescending(c => c.UltimaModificacao);
+        }
+
+        [HttpPost]
         public IActionResult PostConfirmacoes([FromBody] IEnumerable<Confirmacao> confirmacoes)
         {
             if (!ModelState.IsValid)
@@ -37,7 +49,11 @@ namespace MerendaIFCE.WebApp.ApiControllers
             }
 
             db.Confirmacoes.AddRange(novas);
-            db.Confirmacoes.AttachRange(antigas);
+            foreach (var item in antigas)
+            {
+                db.Attach(item);
+                db.Entry(item).State = EntityState.Modified;
+            }
 
             try
             {

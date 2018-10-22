@@ -31,6 +31,8 @@ namespace MerendaIFCE.Sync.Migrations
 
                     b.Property<int>("StatusSincronia");
 
+                    b.Property<DateTimeOffset?>("UltimaModificacao");
+
                     b.HasKey("Id");
 
                     b.HasIndex("InscricaoId");

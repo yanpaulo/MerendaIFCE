@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MerendaIFCE.Sync.Migrations
 {
     [DbContext(typeof(LocalDbContext))]
-    [Migration("20181022145719_InitialCreate")]
+    [Migration("20181022154319_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,8 @@ namespace MerendaIFCE.Sync.Migrations
                     b.Property<int>("StatusConfirmacao");
 
                     b.Property<int>("StatusSincronia");
+
+                    b.Property<DateTimeOffset?>("UltimaModificacao");
 
                     b.HasKey("Id");
 

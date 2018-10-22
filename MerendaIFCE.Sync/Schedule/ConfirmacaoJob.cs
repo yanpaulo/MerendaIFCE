@@ -34,12 +34,17 @@ namespace MerendaIFCE.Sync.Schedule
                     {
                         if (confirmacao == null)
                         {
-                            confirmacao = new Confirmacao { Dia = today };
-                            dia.Inscricao.Confirmacoes.Add(confirmacao);
+                            confirmacao = new Confirmacao
+                            {
+                                Dia = today,
+                                InscricaoId = dia.InscricaoId
+                            };
                         }
                         try
                         {
                             cws.Confirma(confirmacao);
+                            confirmacao.StatusConfirmacao = StatusConfirmacao.Confirmado;
+                            confirmacao.StatusSincronia = StatusSincronia.Modificado;
                         }
                         catch (ApplicationException ex)
                         {
@@ -51,6 +56,7 @@ namespace MerendaIFCE.Sync.Schedule
                     if (confirmacao.StatusSincronia != StatusSincronia.Sincronizado)
                     {
                         listaSync.Add(confirmacao);
+                        confirmacao.StatusSincronia = StatusSincronia.Sincronizado;
                     }
                 }
 
@@ -61,7 +67,7 @@ namespace MerendaIFCE.Sync.Schedule
                     {
                         listaSync[i].IdRemoto = result[i].Id;
                     }
-                    
+
                 }
                 catch (ApplicationException ex)
                 {
