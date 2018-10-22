@@ -55,8 +55,8 @@ namespace MerendaIFCE.Sync.Schedule
 
                     if (confirmacao.StatusSincronia != StatusSincronia.Sincronizado)
                     {
-                        listaSync.Add(confirmacao);
                         confirmacao.StatusSincronia = StatusSincronia.Sincronizado;
+                        listaSync.Add(confirmacao);
                     }
                 }
 

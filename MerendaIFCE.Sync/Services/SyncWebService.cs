@@ -27,15 +27,7 @@ namespace MerendaIFCE.Sync.Services
 
         public async Task<IList<Inscricao>> GetInscricoesAsync(DateTimeOffset? ultimaAlteracao = null)
         {
-            var response = await client.GetAsync($"Inscricoes?alteracao={ultimaAlteracao?.ToString("o")}");
-            var content = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                var result = JsonConvert.DeserializeObject<List<Inscricao>>(content);
-                return result;
-            }
-
-            throw new ApplicationException($"Erro ao obter inscrições do servidor ({response.StatusCode}): {content}");
+            return await EnviaAsync<List<Inscricao>>($"Inscricoes?alteracao={ultimaAlteracao?.ToString("o")}", client.GetAsync);
         }
 
         public async Task<IList<Confirmacao>> GetConfirmacoesAsync(DateTimeOffset? ultimaAlteracao = null)
@@ -47,26 +39,27 @@ namespace MerendaIFCE.Sync.Services
         public async Task<IList<ConfirmacaoDTO>> PostConfirmacoesAsync(IEnumerable<Confirmacao> confirmacaos)
         {
             var list = Mapper.Map<List<ConfirmacaoDTO>>(confirmacaos);
-            return await EnviaAsync<IList<ConfirmacaoDTO>>(list, "Confirmacoes", client.PostAsync);
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            var content = new StringContent(JsonConvert.SerializeObject(confirmacaos, settings), Encoding.UTF8, JsonContentType);
+            var result = await client.PostAsync("Confirmacoes", content);
+            return await HandleResponseAsync<List<ConfirmacaoDTO>>(result);
         }
 
         public async Task<T> EnviaAsync<T>(string url, Func<string, Task<HttpResponseMessage>> method)
         {
             var response = await method(url);
-            var result = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                var ret = JsonConvert.DeserializeObject<T>(result);
-                return ret;
-            }
-
-            throw new ApplicationException($"Erro de servidor ({response.StatusCode}): {result}");
+            return await HandleResponseAsync<T>(response);
         }
 
         public async Task<T> EnviaAsync<T>(object item, string url, Func<string, HttpContent, Task<HttpResponseMessage>> method)
         {
             var content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, JsonContentType);
             var response = await method(url, content);
+            return await HandleResponseAsync<T>(response);
+        }
+
+        private static async Task<T> HandleResponseAsync<T>(HttpResponseMessage response)
+        {
             var result = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
