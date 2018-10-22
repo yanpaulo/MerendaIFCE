@@ -41,13 +41,16 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
             if (ModelState.IsValid)
             {
-                if (!user.Inscricao.Dias.Any(d => d.Dia == dia.Dia))
+                var inscricao = user.Inscricao;
+                if (!inscricao.Dias.Any(d => d.Dia == dia.Dia))
                 {
+                    inscricao.UltimaModificacao = DateTimeOffset.Now;
                     _context.InscricaoDias.Add(dia);
                     _context.SaveChanges();
+
                     await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, user.Inscricao);
 
-                    return Created($"{user.Inscricao.Id}/Dias/{dia.Id}", dia);
+                    return Created($"{inscricao.Id}/Dias/{dia.Id}", dia);
                 }
 
                 return Ok(dia);
@@ -67,10 +70,13 @@ namespace MerendaIFCE.WebApp.ApiControllers
             }
             if (ModelState.IsValid)
             {
-                if (user.Inscricao.Dias.Any(d => d.Id == idDia))
+                var inscricao = user.Inscricao;
+                if (inscricao.Dias.Any(d => d.Id == idDia))
                 {
+                    inscricao.UltimaModificacao = DateTimeOffset.Now;
                     _context.InscricaoDias.Remove(user.Inscricao.Dias.Single(d => d.Id == idDia));
                     _context.SaveChanges();
+
                     await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, user.Inscricao); 
                 }
 
