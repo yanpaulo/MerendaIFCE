@@ -16,7 +16,7 @@ namespace MerendaIFCE.Sync.Schedule
             ExecuteAsync().Wait();
         }
 
-        private async Task ExecuteAsync()
+        public async Task ExecuteAsync()
         {
             using (var db = new LocalDbContext())
             {
@@ -25,17 +25,17 @@ namespace MerendaIFCE.Sync.Schedule
                 var cws = new ConfirmacaoWebService();
 
                 var listaSync = new List<Confirmacao>();
-                var dias = db.InscricaoDias.Include(d => d.Confirmacoes).Where(d => d.Dia == today.DayOfWeek);
+                var dias = db.InscricaoDias.Include(d => d.Inscricao).ThenInclude(i => i.Confirmacoes).Where(d => d.Dia == today.DayOfWeek);
 
                 foreach (var dia in dias)
                 {
-                    var confirmacao = dia.Confirmacoes.FirstOrDefault(d => d.Dia == today);
+                    var confirmacao = dia.Inscricao.Confirmacoes.FirstOrDefault(d => d.Dia == today);
                     if (confirmacao?.StatusConfirmacao != StatusConfirmacao.Confirmado)
                     {
                         if (confirmacao == null)
                         {
                             confirmacao = new Confirmacao { Dia = today };
-                            dia.Confirmacoes.Add(confirmacao);
+                            dia.Inscricao.Confirmacoes.Add(confirmacao);
                         }
                         try
                         {
@@ -56,8 +56,12 @@ namespace MerendaIFCE.Sync.Schedule
 
                 try
                 {
-                    //TODO: Atualizar o ID Remoto
-                    await ws.PostConfirmacoesAsync(listaSync);
+                    var result = await ws.PostConfirmacoesAsync(listaSync);
+                    for (int i = 0; i < result.Count; i++)
+                    {
+                        listaSync[i].IdRemoto = result[i].Id;
+                    }
+                    
                 }
                 catch (ApplicationException ex)
                 {

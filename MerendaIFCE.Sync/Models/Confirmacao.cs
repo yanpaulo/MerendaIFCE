@@ -13,11 +13,13 @@ namespace MerendaIFCE.Sync.Models
 
         public DateTimeOffset Dia { get; set; }
 
-        public InscricaoDia InscricaoDia { get; set; }
+        public Inscricao Inscricao { get; set; }
 
         public StatusConfirmacao StatusConfirmacao { get; set; }
 
         public StatusSincronia StatusSincronia { get; set; }
+
+        public int InscricaoId { get; set; }
     }
 
     public enum StatusConfirmacao

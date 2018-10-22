@@ -18,6 +18,8 @@ namespace MerendaIFCE.Sync.Models
         public List<InscricaoDia> Dias { get; set; }
 
         public DateTimeOffset UltimaModificacao { get; set; }
-        
+
+        public ICollection<Confirmacao> Confirmacoes { get; set; }
+
     }
 }

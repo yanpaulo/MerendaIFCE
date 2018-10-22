@@ -13,6 +13,8 @@ namespace MerendaIFCE.Sync.Services
 {
     class SyncWebService
     {
+        private const string JsonContentType = "application/json";
+
         private HttpClient client;
 
         public SyncWebService()
@@ -36,15 +38,24 @@ namespace MerendaIFCE.Sync.Services
             throw new ApplicationException($"Erro ao obter inscrições do servidor ({response.StatusCode}): {content}");
         }
 
-        public async Task PostConfirmacoesAsync(IEnumerable<Confirmacao> confirmacaos)
+        public async Task<IList<ConfirmacaoDTO>> PostConfirmacoesAsync(IEnumerable<Confirmacao> confirmacaos)
         {
             var list = Mapper.Map<List<ConfirmacaoDTO>>(confirmacaos);
-            var content = new StringContent(JsonConvert.SerializeObject(list), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync("Confirmacoes", content);
-            if (!response.IsSuccessStatusCode)
+            return await EnviaAsync<IList<ConfirmacaoDTO>>(list, "Confirmacoes", client.PostAsync);
+        }
+
+        public async Task<T> EnviaAsync<T>(object item, string url, Func<string, HttpContent, Task<HttpResponseMessage>> method)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, JsonContentType);
+            var response = await method(url, content);
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
             {
-                throw new ApplicationException($"Erro ao enviar confirmações para o servidor ({response.StatusCode}).");
+                var ret = JsonConvert.DeserializeObject<T>(result);
+                return ret;
             }
+
+            throw new ApplicationException($"Erro de servidor ({response.StatusCode}): {result}");
         }
     }
 }

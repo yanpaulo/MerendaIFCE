@@ -3,16 +3,14 @@ using System;
 using MerendaIFCE.Sync.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace MerendaIFCE.Sync.Data.Migrations
+namespace MerendaIFCE.Sync.Migrations
 {
     [DbContext(typeof(LocalDbContext))]
-    [Migration("20181013135954_InitialCreate")]
-    partial class InitialCreate
+    partial class LocalDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,7 +25,7 @@ namespace MerendaIFCE.Sync.Data.Migrations
 
                     b.Property<int?>("IdRemoto");
 
-                    b.Property<int?>("InscricaoDiaId");
+                    b.Property<int>("InscricaoId");
 
                     b.Property<int>("StatusConfirmacao");
 
@@ -35,7 +33,7 @@ namespace MerendaIFCE.Sync.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InscricaoDiaId");
+                    b.HasIndex("InscricaoId");
 
                     b.ToTable("Confirmacoes");
                 });
@@ -71,9 +69,10 @@ namespace MerendaIFCE.Sync.Data.Migrations
 
             modelBuilder.Entity("MerendaIFCE.Sync.Models.Confirmacao", b =>
                 {
-                    b.HasOne("MerendaIFCE.Sync.Models.InscricaoDia", "InscricaoDia")
+                    b.HasOne("MerendaIFCE.Sync.Models.Inscricao", "Inscricao")
                         .WithMany("Confirmacoes")
-                        .HasForeignKey("InscricaoDiaId");
+                        .HasForeignKey("InscricaoId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MerendaIFCE.Sync.Models.InscricaoDia", b =>

@@ -10,5 +10,10 @@ namespace MerendaIFCE.Sync.Services
         public static void Inicializa()
         {
         }
+
+        public static void Executa()
+        {
+
+        }
     }
 }

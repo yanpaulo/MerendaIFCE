@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MerendaIFCE.Sync.Configurations;
+using MerendaIFCE.Sync.Schedule;
 using MerendaIFCE.Sync.Services;
 
 namespace MerendaIFCE.Sync
@@ -17,7 +18,7 @@ namespace MerendaIFCE.Sync
             MappingConfigurations.Configure();
             await BancoDeDados.AtualizaAsync();
             await Sincronizador.InicializaAsync();
-            //Agendamento.Inicializa();
+            await new ConfirmacaoJob().ExecuteAsync();
             Console.ReadKey();
         }
         

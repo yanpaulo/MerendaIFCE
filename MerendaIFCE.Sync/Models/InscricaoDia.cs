@@ -16,7 +16,5 @@ namespace MerendaIFCE.Sync.Models
         public Inscricao Inscricao { get; set; }
 
         public int InscricaoId { get; set; }
-
-        public ICollection<Confirmacao> Confirmacoes { get; set; }
     }
 }
