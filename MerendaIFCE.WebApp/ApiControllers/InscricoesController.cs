@@ -30,34 +30,16 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
         // GET: api/Inscricoes
         [HttpGet]
+        [Authorize(Roles = Constants.SyncRole)]
+        //[Authorize]
         public IEnumerable<Inscricao> GetInscricoes(DateTimeOffset? alteracao = null)
         {
             return _context.Inscricoes.Include(i => i.Dias)
                 .Where(i => alteracao == null || i.UltimaModificacao > alteracao);
         }
 
-
-        // GET: api/Inscricoes/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetInscricao([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var inscricao = await _context.Inscricoes.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (inscricao == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(inscricao);
-        }
-
         [HttpPost("{id}/Dias")]
-        [Authorize]
+        [Authorize(Roles = Constants.UserRole)]
         public async Task<IActionResult> PostInscricaoDia(int id, [FromBody]InscricaoDia dia)
         {
             var user = GetUser();
@@ -92,7 +74,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
         }
 
         [HttpDelete("{idInscricao}/Dias/{idDia}")]
-        [Authorize]
+        [Authorize(Roles = Constants.UserRole)]
         public async Task<IActionResult> DeleteInscricaoDia(int idInscricao, int idDia)
         {
             var user = GetUser();
@@ -109,7 +91,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                     _context.InscricaoDias.Remove(user.Inscricao.Dias.Single(d => d.Id == idDia));
                     _context.SaveChanges();
 
-                    await HubSend(SyncHub.InscricaoChanged, user.Inscricao); 
+                    await HubSend(SyncHub.InscricaoChanged, user.Inscricao);
                 }
 
                 return Ok();
@@ -118,15 +100,36 @@ namespace MerendaIFCE.WebApp.ApiControllers
             return BadRequest(ModelState);
         }
 
-        
+
         [HttpGet("{id}/Confirmacoes")]
+        [Authorize(Roles = Constants.UserRole)]
         public IEnumerable<Confirmacao> GetConfirmacoes(int id, DateTimeOffset? alteracao = null)
         {
             return _context.Confirmacoes
                 .Where(c => c.InscricaoId == id && (alteracao == null || c.UltimaModificacao > alteracao));
         }
-        
+
         #region NonAction
+        // GET: api/Inscricoes/5
+        [HttpGet("{id}")]
+        [NonAction]
+        public async Task<IActionResult> GetInscricao([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var inscricao = await _context.Inscricoes.SingleOrDefaultAsync(m => m.Id == id);
+
+            if (inscricao == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(inscricao);
+        }
+
         // PUT: api/Inscricoes/5
         [NonAction]
         public async Task<IActionResult> PutInscricao([FromRoute] int id, [FromBody] Inscricao inscricao)

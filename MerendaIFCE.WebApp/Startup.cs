@@ -45,20 +45,18 @@ namespace MerendaIFCE.WebApp
                 .AddJwtBearer(bearerOptions =>
                 {
                     bearerOptions.TokenValidationParameters = tokenConfigurations.TokenValidationParameters;
-                })
-                .AddCookie();
+                });
 
             services.AddAuthorization(auth =>
             {
                 var policy = new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, CookieAuthenticationDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser().Build();
-
-                auth.AddPolicy("Bearer", policy);
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser()
+                    .Build();
+                
                 auth.DefaultPolicy = policy;
             });
 
-            services.AddAuthorization();
 
             services.AddSignalR();
 

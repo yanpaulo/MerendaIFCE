@@ -24,13 +24,15 @@ namespace MerendaIFCE.WebApp.ApiControllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly TokenConfigurations tokenConfigurations;
+        private readonly RoleManager<IdentityRole> roleManager;
 
-        public ContaController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, TokenConfigurations tokenConfigurations)
+        public ContaController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, TokenConfigurations tokenConfigurations, RoleManager<IdentityRole> roleManager)
         {
             this.context = context;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.tokenConfigurations = tokenConfigurations;
+            this.roleManager = roleManager;
         }
 
         [HttpPost("Login")]
@@ -51,7 +53,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                     var result = new LoginResult
                     {
                         Login = user.UserName,
-                        Token = GetToken(user),
+                        Token = await GetToken(user),
                         Inscricao = user.Inscricao
                     };
                     return Ok(result);
@@ -91,7 +93,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                     {
                         Login = user.Email,
                         Inscricao = user.Inscricao,
-                        Token = GetToken(user)
+                        Token = await GetToken(user)
                     };
 
                     return Ok(response);
@@ -118,21 +120,24 @@ namespace MerendaIFCE.WebApp.ApiControllers
                 if (existsMatricula)
                 {
                     ModelState.AddModelError("Matricula", "Matrícula já cadastrada");
-                } 
+                }
             }
         }
 
-        private string GetToken(ApplicationUser model)
+        private async Task<string> GetToken(ApplicationUser model)
         {
             var now = DateTime.UtcNow;
-            ClaimsIdentity identity = new ClaimsIdentity(
-                    //new GenericIdentity(login.Username, "Login"),
-                    new GenericIdentity(model.Email),
-                    new[] {
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-                        new Claim(JwtRegisteredClaimNames.UniqueName, model.Email)
-                    }
-                );
+            var roles = await userManager.GetRolesAsync(model);
+            
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
+                new Claim(JwtRegisteredClaimNames.UniqueName, model.UserName),
+            };
+
+            claims.AddRange(roles.Select(r => new Claim("role", r)));
+            
+            ClaimsIdentity identity = new ClaimsIdentity( new GenericIdentity(model.UserName), claims);
 
             var handler = new JwtSecurityTokenHandler();
             var securityToken = handler.CreateToken(new SecurityTokenDescriptor
@@ -141,9 +146,11 @@ namespace MerendaIFCE.WebApp.ApiControllers
                 Audience = tokenConfigurations.Audience,
                 Expires = now.AddMonths(1),
                 IssuedAt = now,
+                
                 SigningCredentials = tokenConfigurations.SigningCredentials,
-                Subject = identity,
+                Subject = identity
             });
+            
 
             var token = handler.WriteToken(securityToken);
 
