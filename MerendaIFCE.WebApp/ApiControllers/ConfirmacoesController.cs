@@ -4,14 +4,16 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using MerendaIFCE.WebApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace MerendaIFCE.WebApp.ApiControllers
 {
-    [Produces("application/json")]
     [Route("api/Confirmacoes")]
+    [Produces("application/json")]
+    [Authorize(Roles = Constants.SyncRole)]
     public class ConfirmacoesController : Controller
     {
         private readonly ApplicationDbContext db;

@@ -50,7 +50,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                 {
                     var result = new LoginResult
                     {
-                        Email = user.Email,
+                        Login = user.UserName,
                         Token = GetToken(user),
                         Inscricao = user.Inscricao
                     };
@@ -89,7 +89,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
                     var response = new LoginResult
                     {
-                        Email = user.Email,
+                        Login = user.Email,
                         Inscricao = user.Inscricao,
                         Token = GetToken(user)
                     };

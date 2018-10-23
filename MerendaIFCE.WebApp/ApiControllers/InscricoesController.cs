@@ -9,6 +9,7 @@ using MerendaIFCE.WebApp.Models;
 using MerendaIFCE.WebApp.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace MerendaIFCE.WebApp.ApiControllers
 {
@@ -18,11 +19,13 @@ namespace MerendaIFCE.WebApp.ApiControllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IHubContext<SyncHub> _hubContext;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public InscricoesController(ApplicationDbContext context, IHubContext<SyncHub> hubContext)
+        public InscricoesController(ApplicationDbContext context, IHubContext<SyncHub> hubContext, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _hubContext = hubContext;
+            this.userManager = userManager;
         }
 
         // GET: api/Inscricoes
@@ -54,7 +57,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
         }
 
         [HttpPost("{id}/Dias")]
-        [Authorize("Bearer")]
+        [Authorize]
         public async Task<IActionResult> PostInscricaoDia(int id, [FromBody]InscricaoDia dia)
         {
             var user = GetUser();
@@ -76,7 +79,8 @@ namespace MerendaIFCE.WebApp.ApiControllers
                     _context.InscricaoDias.Add(dia);
                     _context.SaveChanges();
 
-                    await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, user.Inscricao);
+
+                    await HubSend(SyncHub.InscricaoChanged, user.Inscricao);
 
                     return Created($"{inscricao.Id}/Dias/{dia.Id}", dia);
                 }
@@ -88,7 +92,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
         }
 
         [HttpDelete("{idInscricao}/Dias/{idDia}")]
-        [Authorize("Bearer")]
+        [Authorize]
         public async Task<IActionResult> DeleteInscricaoDia(int idInscricao, int idDia)
         {
             var user = GetUser();
@@ -105,7 +109,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                     _context.InscricaoDias.Remove(user.Inscricao.Dias.Single(d => d.Id == idDia));
                     _context.SaveChanges();
 
-                    await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, user.Inscricao); 
+                    await HubSend(SyncHub.InscricaoChanged, user.Inscricao); 
                 }
 
                 return Ok();
@@ -153,7 +157,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
 
             await _context.SaveChangesAsync();
-            await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, inscricao);
+            await HubSend(SyncHub.InscricaoChanged, inscricao);
 
             return NoContent();
         }
@@ -176,7 +180,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
             _context.Inscricoes.Add(inscricao);
             await _context.SaveChangesAsync();
-            await _hubContext.Clients.All.SendAsync(SyncHub.InscricaoChanged, inscricao);
+            await HubSend(SyncHub.InscricaoChanged, inscricao);
 
             return CreatedAtAction("GetInscricao", new { id = inscricao.Id }, inscricao);
         }
@@ -204,6 +208,13 @@ namespace MerendaIFCE.WebApp.ApiControllers
         }
 
         #endregion
+
+        private async Task HubSend(string method, object arg)
+        {
+            var users = await userManager.GetUsersInRoleAsync(Constants.SyncRole);
+            var clients = _hubContext.Clients.Users(users.Select(u => u.UserName).ToList());
+            await clients.SendAsync(method, arg);
+        }
 
         private bool InscricaoExists(int id)
         {
