@@ -13,6 +13,8 @@ namespace MerendaIFCE.Sync.Models
 
         public DbSet<Confirmacao> Confirmacoes { get; set; }
 
+        public DbSet<Usuario> Usuario { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);

@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <UserSecretsId>C8EF5AD5-0F31-4D49-AD8A-78FCEBE20BE3</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,12 +10,26 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
+
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />

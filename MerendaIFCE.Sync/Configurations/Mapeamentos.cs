@@ -7,9 +7,9 @@ using System.Text;
 
 namespace MerendaIFCE.Sync.Configurations
 {
-    public class MappingConfigurations
+    public class Mapeamentos
     {
-        public static void Configure()
+        public static void Configura()
         {
             Mapper.Initialize(cfg =>
             {

@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using AutoMapper;
 using MerendaIFCE.Sync.DTOs;
+using Microsoft.Extensions.Configuration;
+using System.Net.Http.Headers;
 
 namespace MerendaIFCE.Sync.Services
 {
@@ -23,6 +25,32 @@ namespace MerendaIFCE.Sync.Services
             {
                 BaseAddress = new Uri("http://localhost:7354/api/")
             };
+            using (var db = new LocalDbContext())
+            {
+                var usuario = db.Usuario.SingleOrDefault();
+                if (usuario != null)
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", usuario.Token);
+                }
+            }
+        }
+
+        public async Task<Usuario> LogInAsync()
+        {
+            using (var db = new LocalDbContext())
+            {
+                Login login = new Login();
+                App.Current.Settings.GetSection("SyncUser").Bind(login);
+                var usuario = await EnviaAsync<Usuario>(login, "Conta/Login", client.PostAsync);
+                db.Usuario.RemoveRange(db.Usuario.ToList());
+                db.Add(usuario);
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", usuario.Token);
+
+                db.SaveChanges();
+                return usuario;
+            }
+
         }
 
         public async Task<IList<Inscricao>> GetInscricoesAsync(DateTimeOffset? ultimaAlteracao = null)
@@ -45,17 +73,33 @@ namespace MerendaIFCE.Sync.Services
             return await HandleResponseAsync<List<ConfirmacaoDTO>>(result);
         }
 
-        public async Task<T> EnviaAsync<T>(string url, Func<string, Task<HttpResponseMessage>> method)
+        public async Task<T> EnviaAsync<T>(string url, Func<string, Task<HttpResponseMessage>> method, int retry = 0)
         {
             var response = await method(url);
-            return await HandleResponseAsync<T>(response);
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized && retry == 0)
+            {
+                await LogInAsync();
+                return await EnviaAsync<T>(url, method, ++retry);
+            }
+            else
+            {
+                return await HandleResponseAsync<T>(response);
+            }
         }
 
-        public async Task<T> EnviaAsync<T>(object item, string url, Func<string, HttpContent, Task<HttpResponseMessage>> method)
+        public async Task<T> EnviaAsync<T>(object item, string url, Func<string, HttpContent, Task<HttpResponseMessage>> method, int retry = 0)
         {
             var content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, JsonContentType);
             var response = await method(url, content);
-            return await HandleResponseAsync<T>(response);
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized && retry == 0)
+            {
+                await LogInAsync();
+                return await EnviaAsync<T>(item, url, method, ++retry);
+            }
+            else
+            {
+                return await HandleResponseAsync<T>(response);
+            }
         }
 
         private static async Task<T> HandleResponseAsync<T>(HttpResponseMessage response)

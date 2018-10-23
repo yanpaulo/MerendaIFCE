@@ -10,16 +10,29 @@ namespace MerendaIFCE.Sync.Services
 {
     public class Sincronizador
     {
+        private static Task<string> GetToken()
+        {
+            using (var db = new LocalDbContext())
+            {
+                return Task.FromResult(db.Usuario.SingleOrDefault()?.Token);
+            }
+        }
+
         public static async Task InicializaAsync()
         {
             var connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:7354/sync")
-                .Build();
+                .WithUrl("http://localhost:7354/sync", options =>
+                {
 
+                    options.AccessTokenProvider = GetToken;
+                })
+                .Build();
+            
             connection.On<Inscricao>("InscricaoChanged", AtualizaInscricao);
 
             connection.Closed += async error =>
             {
+                
                 await Task.Delay(1000);
                 await connection.StartAsync();
             };

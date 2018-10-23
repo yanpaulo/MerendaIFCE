@@ -3,14 +3,16 @@ using System;
 using MerendaIFCE.Sync.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MerendaIFCE.Sync.Migrations
 {
     [DbContext(typeof(LocalDbContext))]
-    partial class LocalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181023113017_Create_Usuario")]
+    partial class Create_Usuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
