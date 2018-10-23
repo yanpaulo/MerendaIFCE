@@ -17,6 +17,7 @@ using MerendaIFCE.WebApp.Services;
 namespace MerendaIFCE.WebApp.Controllers
 {
     [Authorize]
+    [NonController]
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
