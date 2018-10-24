@@ -135,7 +135,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                 new Claim(JwtRegisteredClaimNames.UniqueName, model.UserName),
             };
 
-            claims.AddRange(roles.Select(r => new Claim("role", r)));
+            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
             
             ClaimsIdentity identity = new ClaimsIdentity( new GenericIdentity(model.UserName), claims);
 

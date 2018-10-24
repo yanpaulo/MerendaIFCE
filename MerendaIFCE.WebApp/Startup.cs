@@ -41,22 +41,12 @@ namespace MerendaIFCE.WebApp
             services.AddAuthentication(options =>
                 {
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(bearerOptions =>
                 {
                     bearerOptions.TokenValidationParameters = tokenConfigurations.TokenValidationParameters;
                 });
-
-            services.AddAuthorization(auth =>
-            {
-                var policy = new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser()
-                    .Build();
-                
-                auth.DefaultPolicy = policy;
-            });
-
 
             services.AddSignalR();
 
