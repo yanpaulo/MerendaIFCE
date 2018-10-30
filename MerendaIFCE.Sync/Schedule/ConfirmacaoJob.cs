@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using MerendaIFCE.Sync.Services;
 using System.Threading.Tasks;
+using MerendaIFCE.Sync.Services.Confirmador;
 
 namespace MerendaIFCE.Sync.Schedule
 {
@@ -22,7 +23,6 @@ namespace MerendaIFCE.Sync.Schedule
             {
                 var today = App.Current.Today;
                 var ws = new SyncWebService();
-                var cws = new ConfirmacaoWebService();
 
                 var listaSync = new List<Confirmacao>();
                 var dias = db.InscricaoDias.Include(d => d.Inscricao).ThenInclude(i => i.Confirmacoes).Where(d => d.Dia == today.DayOfWeek);
@@ -42,22 +42,24 @@ namespace MerendaIFCE.Sync.Schedule
                         }
                         try
                         {
-                            cws.Confirma(confirmacao);
+                            await ConfirmacaoWebService.Instance.ConfirmaAsync(confirmacao);
                             confirmacao.StatusConfirmacao = StatusConfirmacao.Confirmado;
-                            confirmacao.StatusSincronia = StatusSincronia.Modificado;
                         }
                         catch (ApplicationException ex)
                         {
                             Console.WriteLine(ex.Message);
                             confirmacao.StatusConfirmacao = StatusConfirmacao.Erro;
                         }
+                        confirmacao.StatusSincronia = StatusSincronia.Modificado;
+
                     }
 
                     if (confirmacao.StatusSincronia != StatusSincronia.Sincronizado)
                     {
-                        confirmacao.StatusSincronia = StatusSincronia.Sincronizado;
                         listaSync.Add(confirmacao);
                     }
+
+                    confirmacao.StatusSincronia = StatusSincronia.Sincronizado;
                 }
 
                 try

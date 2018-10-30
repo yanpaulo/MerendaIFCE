@@ -18,7 +18,7 @@ namespace MerendaIFCE.Sync.Services
         private const string JsonContentType = "application/json";
 
         private HttpClient client;
-
+        
         public SyncWebService()
         {
             client = new HttpClient
