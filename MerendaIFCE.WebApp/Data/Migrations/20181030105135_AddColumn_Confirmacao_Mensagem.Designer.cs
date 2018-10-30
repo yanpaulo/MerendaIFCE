@@ -11,9 +11,10 @@ using System;
 namespace MerendaIFCE.WebApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181030105135_AddColumn_Confirmacao_Mensagem")]
+    partial class AddColumn_Confirmacao_Mensagem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

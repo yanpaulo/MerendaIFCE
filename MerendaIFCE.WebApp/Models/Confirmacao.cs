@@ -9,6 +9,8 @@ namespace MerendaIFCE.WebApp.Models
     {
         public int Id { get; set; }
 
+        public string Mensagem { get; set; }
+
         public DateTimeOffset Dia { get; set; }
 
         public DateTimeOffset UltimaModificacao { get; set; }

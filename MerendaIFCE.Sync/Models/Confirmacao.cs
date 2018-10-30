@@ -11,15 +11,17 @@ namespace MerendaIFCE.Sync.Models
 
         public int? IdRemoto { get; set; }
 
+        public string Mensagem { get; set; }
+
         public DateTimeOffset? UltimaModificacao { get; set; }
 
         public DateTimeOffset Dia { get; set; }
 
-        public Inscricao Inscricao { get; set; }
-
         public StatusConfirmacao StatusConfirmacao { get; set; }
 
         public StatusSincronia StatusSincronia { get; set; }
+
+        public Inscricao Inscricao { get; set; }
 
         public int InscricaoId { get; set; }
     }
