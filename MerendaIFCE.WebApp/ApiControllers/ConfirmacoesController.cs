@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using MerendaIFCE.WebApp.Models;
+using MerendaIFCE.WebApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +18,12 @@ namespace MerendaIFCE.WebApp.ApiControllers
     public class ConfirmacoesController : Controller
     {
         private readonly ApplicationDbContext db;
+        private readonly NotificationService notification;
 
-        public ConfirmacoesController(ApplicationDbContext db)
+        public ConfirmacoesController(ApplicationDbContext db, NotificationService notification)
         {
             this.db = db;
+            this.notification = notification;
         }
 
         [HttpGet]
@@ -34,7 +37,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
         }
 
         [HttpPost]
-        public IActionResult PostConfirmacoes([FromBody] IEnumerable<Confirmacao> confirmacoes)
+        public async Task<IActionResult> PostConfirmacoesAsync([FromBody] IEnumerable<Confirmacao> confirmacoes)
         {
             if (!ModelState.IsValid)
             {
@@ -47,6 +50,9 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
             foreach (var item in confirmacoes)
             {
+                var inscricao = db.Inscricoes.Single(i => i.Id == item.InscricaoId);
+                await notification.Hub.SendTemplateNotificationAsync(new Dictionary<string, string> { { "message", "O status da sua refeição foi alterado." } });
+
                 item.UltimaModificacao = now;
             }
 
