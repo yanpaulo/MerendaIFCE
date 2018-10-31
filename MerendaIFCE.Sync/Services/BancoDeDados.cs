@@ -31,10 +31,11 @@ namespace MerendaIFCE.Sync.Services
             var alteracoes = await ws.GetInscricoesAsync(ultima);
             foreach (var remoto in alteracoes)
             {
-                var local = db.Inscricoes.SingleOrDefault(i => i.Id == remoto.Id);
+                var local = db.Inscricoes.Include(i => i.Dias).SingleOrDefault(i => i.Id == remoto.Id);
                 if (local != null)
                 {
                     db.Inscricoes.Remove(local);
+                    db.InscricaoDias.RemoveRange(local.Dias);
                 }
 
                 db.Inscricoes.Add(remoto);

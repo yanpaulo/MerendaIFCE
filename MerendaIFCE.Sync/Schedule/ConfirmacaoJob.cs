@@ -25,7 +25,7 @@ namespace MerendaIFCE.Sync.Schedule
                 var ws = new SyncWebService();
 
                 var listaSync = new List<Confirmacao>();
-                var dias = db.InscricaoDias.Include(d => d.Inscricao).ThenInclude(i => i.Confirmacoes).Where(d => d.Dia == today.DayOfWeek);
+                var dias = db.InscricaoDias.Include(d => d.Inscricao).ThenInclude(i => i.Confirmacoes).Where(d => d.Dia == today.DayOfWeek).ToList();
 
                 foreach (var dia in dias)
                 {

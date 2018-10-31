@@ -26,6 +26,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
         {
             var response = await client.GetAsync("");
             var content = await response.Content.ReadAsStringAsync();
+
             if (!response.IsSuccessStatusCode)
             {
                 throw new ApplicationException($"Erro ({response.StatusCode}:\r\n {content}");
@@ -34,6 +35,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
             try
             {
                 token = GetValueOrContent(content, "name", "_token");
+                client.DefaultRequestHeaders.Add("X-CSRF-TOKEN", token);
             }
             catch (InvalidOperationException ex)
             {
@@ -55,7 +57,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
             return lista.FirstOrDefault();
         }
 
-        public async Task<Refeicao> GetRefeicaoAsync()
+        public async Task<Refeicao> GetRefeicaoAsync(int retry = 1)
         {
             if (this.refeicao?.Data == App.Current.Today)
             {
@@ -67,13 +69,25 @@ namespace MerendaIFCE.Sync.Services.Confirmador
                 new KeyValuePair<string, string>("data", App.Current.Today.ToString("yyyy-MM-dd"))
             });
 
-            var response =await client.PostAsync("refeicao/filtrar", data);
+            var response = await client.PostAsync("refeicao/filtrar", data);
             var content = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new ApplicationException();
+                if (retry > 0)
+                {
+                    await AtualizaTokensAsync();
+                    return await GetRefeicaoAsync(retry - 1);
+                }
+                else
+                {
+                    throw new ApplicationException();
+                }
             }
+            content = content
+                .Replace("\"[", "[")
+                .Replace("]\"", "]")
+                .Replace("\\\"", "'");
 
             var refeicao = JsonConvert.DeserializeObject<List<Refeicao>>(content)?
                 .FirstOrDefault();
@@ -123,7 +137,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
                 throw new ApplicationException(ex.Message);
             }
         }
-      
+
 
         private string GetValueOrContent(string html, string attr, string nome)
         {
