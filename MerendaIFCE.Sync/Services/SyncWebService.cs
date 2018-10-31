@@ -68,7 +68,7 @@ namespace MerendaIFCE.Sync.Services
         {
             var list = Mapper.Map<List<ConfirmacaoDTO>>(confirmacaos);
             var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-            var content = new StringContent(JsonConvert.SerializeObject(confirmacaos, settings), Encoding.UTF8, JsonContentType);
+            var content = new StringContent(JsonConvert.SerializeObject(list, settings), Encoding.UTF8, JsonContentType);
             var result = await client.PostAsync("Confirmacoes", content);
             return await HandleResponseAsync<List<ConfirmacaoDTO>>(result);
         }
