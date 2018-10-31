@@ -65,6 +65,8 @@ namespace MerendaIFCE.WebApp
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
+            services.AddSingleton<NotificationService>();
+
             services.AddMvc();
         }
 
