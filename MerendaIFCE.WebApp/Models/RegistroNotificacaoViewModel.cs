@@ -11,7 +11,7 @@ namespace MerendaIFCE.WebApp.Models
         public PlataformaNotificacao Plataforma { get; set; }
 
         [Required]
-        public string PNS { get; set; }
+        public string Handle { get; set; }
     }
 
     public enum PlataformaNotificacao

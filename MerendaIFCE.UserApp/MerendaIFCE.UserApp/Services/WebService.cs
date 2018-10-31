@@ -26,7 +26,7 @@ namespace MerendaIFCE.UserApp.Services
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", usuario.Token);
             }
         }
-        
+
         public async Task<Usuario> LoginAsync(Login login)
         {
             return await EnviaAsync<Usuario>(login, "Conta/Login", client.PostAsync);
@@ -47,7 +47,23 @@ namespace MerendaIFCE.UserApp.Services
             await EnviaAsync<InscricaoDia>(dia, $"Inscricoes/{dia.InscricaoId}/Dias/{dia.Id}", async (url, content) => await client.DeleteAsync(url));
         }
 
-        public async Task<T> EnviaAsync<T>(object item, string url, Func<string, HttpContent, Task<HttpResponseMessage>> method )
+        public async Task InscreveNotificacaoAsync(CanalPush canal)
+        {
+            await EnviaAsync(canal, "Notificacoes/Inscreve", client.PostAsync);
+        }
+
+        public async Task EnviaAsync(object item, string url, Func<string, HttpContent, Task<HttpResponseMessage>> method)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, JsonContentType);
+            var response = await method(url, content);
+            var result = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ServerException(result, response.StatusCode);
+            }
+        }
+
+        public async Task<T> EnviaAsync<T>(object item, string url, Func<string, HttpContent, Task<HttpResponseMessage>> method)
         {
             var content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, JsonContentType);
             var response = await method(url, content);
@@ -61,13 +77,13 @@ namespace MerendaIFCE.UserApp.Services
             throw new ServerException(result, response.StatusCode);
         }
 
-       
 
-        
+
+
 
         public void Dispose()
         {
-            
+
         }
     }
 }

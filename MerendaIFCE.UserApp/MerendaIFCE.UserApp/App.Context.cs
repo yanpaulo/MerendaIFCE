@@ -3,6 +3,7 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using MerendaIFCE.UserApp.Models;
+using System.Collections.Generic;
 
 namespace MerendaIFCE.UserApp
 {
@@ -20,6 +21,7 @@ namespace MerendaIFCE.UserApp
         private void SetUsuario(Usuario usuario)
         {
             db.SetUsuario(usuario);
+            usuario.Inscricao.Dias = usuario.Inscricao.Dias ?? new List<InscricaoDia>();
             this.usuario = usuario;
         }
 

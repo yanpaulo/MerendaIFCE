@@ -71,6 +71,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
         public async Task<IActionResult> PostAsync([FromBody]RegisterViewModel model)
         {
             Valida(model);
+            await CriaRoleAsync();
 
             if (ModelState.IsValid)
             {
@@ -87,6 +88,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
                 if (result.Succeeded)
                 {
+                    await userManager.AddToRoleAsync(user, Constants.UserRole);
                     await signInManager.SignInAsync(user, isPersistent: false);
 
                     var response = new LoginResult
@@ -162,6 +164,20 @@ namespace MerendaIFCE.WebApp.ApiControllers
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
+            }
+        }
+
+        private async Task CriaRoleAsync()
+        {
+            var role = await roleManager.FindByNameAsync(Constants.UserRole);
+            if (role == null)
+            {
+                role = new IdentityRole { Name = Constants.UserRole };
+                var roleResult = await roleManager.CreateAsync(role);
+                if (!roleResult.Succeeded)
+                {
+                    ModelState.AddModelError("", $"Erro ao criar Role {Constants.UserRole}");
+                }
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MerendaIFCE.UserApp.Exceptions;
+using MerendaIFCE.UserApp.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,10 +20,24 @@ namespace MerendaIFCE.UserApp.Views
             MasterPage.ListView.ItemSelected += ListView_ItemSelected;
         }
 
+        private async void MasterDetailPage_Appearing(object sender, EventArgs e)
+        {
+            var ws = new WebService();
+
+            try
+            {
+                var canal = await DependencyService.Get<IPushService>().GetCanal();
+                await ws.InscreveNotificacaoAsync(canal);
+            }
+            catch (ServerException ex)
+            {
+                await ex.HandleAsync(this);
+            }
+        }
+
         private void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            var item = e.SelectedItem as RootPageMenuItem;
-            if (item == null)
+            if (!(e.SelectedItem is RootPageMenuItem item))
                 return;
 
             var page = (Page)Activator.CreateInstance(item.TargetType);
@@ -32,5 +48,6 @@ namespace MerendaIFCE.UserApp.Views
 
             MasterPage.ListView.SelectedItem = null;
         }
+
     }
 }
