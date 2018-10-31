@@ -58,6 +58,8 @@ namespace MerendaIFCE.WebApp.ApiControllers
                 if (!inscricao.Dias.Any(d => d.Dia == dia.Dia))
                 {
                     inscricao.UltimaModificacao = DateTimeOffset.Now;
+                    inscricao.UltimaModificacao = DateTimeOffset.Now;
+
                     _context.InscricaoDias.Add(dia);
                     _context.SaveChanges();
 
@@ -66,7 +68,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
                     return Created($"{inscricao.Id}/Dias/{dia.Id}", dia);
                 }
-
+                
                 return Ok(dia);
             }
 
