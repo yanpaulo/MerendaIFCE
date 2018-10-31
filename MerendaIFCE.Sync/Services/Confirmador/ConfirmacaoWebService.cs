@@ -142,7 +142,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
         private string GetValueOrContent(string html, string attr, string nome)
         {
             var pattern = $@"<.*? {attr}=""{nome}"" value=""(.*?)"".*?>|<.*? {attr}=""{nome}"" value=""(.*?)"".*?>|<.*? {attr}=""{nome}"".*?>(.*?)</.*>";
-            var match = Regex.Match(html, pattern);
+            var match = Regex.Match(html, pattern, RegexOptions.Singleline);
             var value =
                 match.Groups[1].Success ? match.Groups[1].Value :
                     match.Groups[2].Success ? match.Groups[2].Value :
