@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace MerendaIFCE.Sync.Models
 
         public StatusSincronia StatusSincronia { get; set; }
 
+        [JsonIgnore]
         public Inscricao Inscricao { get; set; }
 
         public int InscricaoId { get; set; }

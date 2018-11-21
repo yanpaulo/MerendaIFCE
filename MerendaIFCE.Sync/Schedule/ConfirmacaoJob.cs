@@ -37,7 +37,8 @@ namespace MerendaIFCE.Sync.Schedule
                             confirmacao = new Confirmacao
                             {
                                 Dia = today,
-                                InscricaoId = dia.InscricaoId
+                                InscricaoId = dia.InscricaoId,
+                                Inscricao = dia.Inscricao
                             };
                         }
                         try
