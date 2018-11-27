@@ -17,7 +17,6 @@ namespace MerendaIFCE.Sync.Services
             {
                 db.Database.Migrate();
 
-
                 await AtualizaInscricoes(db, ws);
                 await AtualizaConfirmacoes(db, ws);
 

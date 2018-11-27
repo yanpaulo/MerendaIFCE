@@ -45,14 +45,7 @@ namespace MerendaIFCE.Sync.Services
         {
             using (var db = new LocalDbContext())
             {
-                var local = db.Inscricoes.SingleOrDefault(i => i.Id == inscricao.Id);
-                if (local != null)
-                {
-                    db.Inscricoes.Remove(local);
-                }
-
-                db.Inscricoes.Add(inscricao);
-
+                db.UpdateInscricao(inscricao);
                 db.SaveChanges();
             }
         }
