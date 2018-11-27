@@ -12,7 +12,7 @@ namespace MerendaIFCE.Sync
 
         public HttpResponseMessage Response { get; set; }
 
-        public ServerException(HttpResponseMessage response, string content)
+        public ServerException(HttpResponseMessage response, string content) : base($"Erro ao solicitar URL ({response.RequestMessage.RequestUri})")
         {
             Response = response;
             Content = content;
