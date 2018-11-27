@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MerendaIFCE.Sync.DTOs
+namespace MerendaIFCE.Sync.DTO
 {
     public class ConfirmacaoDTO
     {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using MerendaIFCE.Sync.Configurations;
-using MerendaIFCE.Sync.Schedule;
 using MerendaIFCE.Sync.Services;
 using Microsoft.Extensions.Configuration;
 
@@ -23,7 +21,7 @@ namespace MerendaIFCE.Sync
             Mapeamentos.Configura();
             await BancoDeDados.AtualizaAsync();
             await Sincronizador.InicializaAsync();
-            await new ConfirmacaoJob().ExecuteAsync();
+            await new TarefaConfirmacao().ExecuteAsync();
         }
 
         private void Configura()

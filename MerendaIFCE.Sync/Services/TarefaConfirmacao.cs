@@ -8,9 +8,9 @@ using MerendaIFCE.Sync.Services;
 using System.Threading.Tasks;
 using MerendaIFCE.Sync.Services.Confirmador;
 
-namespace MerendaIFCE.Sync.Schedule
+namespace MerendaIFCE.Sync.Services
 {
-    public class ConfirmacaoJob
+    public class TarefaConfirmacao
     {
         public void Execute()
         {

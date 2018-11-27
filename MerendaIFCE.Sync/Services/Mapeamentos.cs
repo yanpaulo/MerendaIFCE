@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MerendaIFCE.Sync.Configurations
+namespace MerendaIFCE.Sync.Services
 {
     public class Mapeamentos
     {
