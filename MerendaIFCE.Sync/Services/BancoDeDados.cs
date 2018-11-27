@@ -31,14 +31,17 @@ namespace MerendaIFCE.Sync.Services
             var alteracoes = await ws.GetInscricoesAsync(ultima);
             foreach (var remoto in alteracoes)
             {
-                var local = db.Inscricoes.Include(i => i.Dias).SingleOrDefault(i => i.Id == remoto.Id);
-                if (local != null)
+                if (db.Inscricoes.Include(i => i.Dias).SingleOrDefault(i => i.Id == remoto.Id) is Inscricao local)
                 {
-                    db.Inscricoes.Remove(local);
-                    db.InscricaoDias.RemoveRange(local.Dias);
-                }
+                    db.RemoveRange(local.Dias);
 
-                db.Inscricoes.Add(remoto);
+                    db.Entry(local).CurrentValues.SetValues(remoto);
+                    db.Entry(local).Collection(l => l.Dias).CurrentValue = remoto.Dias;
+                }
+                else
+                {
+                    db.Add(remoto);
+                }
             }
         }
 
@@ -49,14 +52,18 @@ namespace MerendaIFCE.Sync.Services
             var alteracoes = await ws.GetConfirmacoesAsync(ultima);
             foreach (var remoto in alteracoes)
             {
-                var local = db.Confirmacoes.SingleOrDefault(i => i.IdRemoto == remoto.Id);
-                if (local != null)
+                remoto.StatusSincronia = StatusSincronia.Sincronizado;
+
+                if (db.Confirmacoes.SingleOrDefault(i => i.IdRemoto == remoto.IdRemoto) is Confirmacao local)
                 {
-                    db.Confirmacoes.Remove(local);
+                    remoto.Id = local.Id;
+                    db.Entry(local).CurrentValues.SetValues(remoto);
+                }
+                else
+                {
+                    db.Add(remoto);
                 }
 
-                remoto.StatusSincronia = StatusSincronia.Sincronizado;
-                db.Confirmacoes.Add(remoto);
             }
         }
     }
