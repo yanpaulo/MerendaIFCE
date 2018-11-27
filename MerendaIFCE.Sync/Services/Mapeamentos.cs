@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MerendaIFCE.Sync.DTOs;
+using MerendaIFCE.Sync.DTO;
 using MerendaIFCE.Sync.Models;
 using System;
 using System.Collections.Generic;

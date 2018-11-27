@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using AutoMapper;
-using MerendaIFCE.Sync.DTOs;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
+using MerendaIFCE.Sync.DTO;
 
 namespace MerendaIFCE.Sync.Services
 {

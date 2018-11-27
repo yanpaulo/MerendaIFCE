@@ -12,10 +12,6 @@ namespace MerendaIFCE.Sync.Services
 {
     public class TarefaConfirmacao
     {
-        public void Execute()
-        {
-            ExecuteAsync().Wait();
-        }
 
         public async Task ExecuteAsync()
         {

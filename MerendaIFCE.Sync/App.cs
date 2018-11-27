@@ -17,6 +17,7 @@ namespace MerendaIFCE.Sync
 
         public async Task InitAsync()
         {
+            throw new NotImplementedException();
             Configura();
             Mapeamentos.Configura();
             await BancoDeDados.AtualizaAsync();
