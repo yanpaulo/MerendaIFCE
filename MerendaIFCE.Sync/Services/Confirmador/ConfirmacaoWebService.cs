@@ -14,6 +14,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
     {
         private string token;
         private Refeicao refeicao;
+        // TODO: Catch HttpRequestException on every request
         private HttpClient client = new HttpClient
         {
             BaseAddress = new Uri("http://intranet.maracanau.ifce.edu.br/ifce/ra/")

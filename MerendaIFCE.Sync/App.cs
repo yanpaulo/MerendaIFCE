@@ -24,8 +24,6 @@ namespace MerendaIFCE.Sync
             await BancoDeDados.AtualizaAsync();
             await Sincronizador.InicializaAsync();
             await new ConfirmacaoJob().ExecuteAsync();
-
-            Console.ReadKey();
         }
 
         private void Configura()
