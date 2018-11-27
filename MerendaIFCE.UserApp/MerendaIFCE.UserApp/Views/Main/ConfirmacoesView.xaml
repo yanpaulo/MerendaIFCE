@@ -1,15 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MerendaIFCE.UserApp.Views.Main.ConfirmacoesView">
+             x:Class="MerendaIFCE.UserApp.Views.Main.ConfirmacoesView"
+             Appearing="ContentPage_Appearing"
+             IsBusy="{Binding IsBusy}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Label Text="Confirmações Recentes"></Label>
+        <Label Grid.Row="0" Text="Confirmações Recentes"></Label>
 
-        <ListView></ListView>
+        <ListView Grid.Row="1" ItemsSource="{Binding Confirmacoes}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Mensagem}" Detail="{Binding UltimaModificacao,StringFormat='{0:d}'}"></TextCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </ContentPage>

@@ -103,12 +103,16 @@ namespace MerendaIFCE.WebApp.ApiControllers
         }
 
 
-        [HttpGet("{id}/Confirmacoes")]
+        [HttpGet("Confirmacoes")]
         [Authorize(Roles = Constants.UserRole)]
-        public IEnumerable<Confirmacao> GetConfirmacoes(int id, DateTimeOffset? alteracao = null)
+        public IEnumerable<Confirmacao> GetConfirmacoes([FromQuery]DateTimeOffset? alteracao = null)
         {
+            var user = GetUser();
+            
             return _context.Confirmacoes
-                .Where(c => c.InscricaoId == id && (alteracao == null || c.UltimaModificacao > alteracao));
+                .OrderByDescending(c => c.UltimaModificacao)
+                .Where(c => c.InscricaoId == user.Inscricao.Id && (alteracao == null || c.UltimaModificacao > alteracao))
+                .Take(20);
         }
 
         #region NonAction

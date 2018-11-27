@@ -69,7 +69,7 @@ namespace MerendaIFCE.UserApp.Models
 
         public void InsertDia(InscricaoDia dia)
         {
-            db.Table<InscricaoDia>().Delete(i => i.InscricaoId == i.InscricaoId && i.Dia == dia.Dia);
+            db.Table<InscricaoDia>().Delete(i => i.InscricaoId == dia.InscricaoId && i.Dia == dia.Dia);
             db.Insert(dia);
         }
 
@@ -78,9 +78,12 @@ namespace MerendaIFCE.UserApp.Models
             db.Delete(dia);
         }
 
+        public List<Confirmacao> GetConfirmacoes() => 
+            db.Table<Confirmacao>().OrderByDescending(c => c.UltimaModificacao).Take(20).ToList();
 
-
-
-
+        public void AddConfirmacoes(IEnumerable<Confirmacao> confirmacoes)
+        {
+            db.InsertAll(confirmacoes);
+        }
     }
 }
