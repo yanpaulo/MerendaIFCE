@@ -12,11 +12,12 @@ namespace MerendaIFCE.Sync.Services
     {
         public static async Task AtualizaAsync()
         {
+            var ws = new SyncWebService();
             using (var db = new LocalDbContext())
             {
                 db.Database.Migrate();
 
-                var ws = new SyncWebService();
+
                 await AtualizaInscricoes(db, ws);
                 await AtualizaConfirmacoes(db, ws);
 
@@ -31,17 +32,7 @@ namespace MerendaIFCE.Sync.Services
             var alteracoes = await ws.GetInscricoesAsync(ultima);
             foreach (var remoto in alteracoes)
             {
-                if (db.Inscricoes.Include(i => i.Dias).SingleOrDefault(i => i.Id == remoto.Id) is Inscricao local)
-                {
-                    db.RemoveRange(local.Dias);
-
-                    db.Entry(local).CurrentValues.SetValues(remoto);
-                    db.Entry(local).Collection(l => l.Dias).CurrentValue = remoto.Dias;
-                }
-                else
-                {
-                    db.Add(remoto);
-                }
+                db.UpdateInscricao(remoto);
             }
         }
 
@@ -54,15 +45,7 @@ namespace MerendaIFCE.Sync.Services
             {
                 remoto.StatusSincronia = StatusSincronia.Sincronizado;
 
-                if (db.Confirmacoes.SingleOrDefault(i => i.IdRemoto == remoto.IdRemoto) is Confirmacao local)
-                {
-                    remoto.Id = local.Id;
-                    db.Entry(local).CurrentValues.SetValues(remoto);
-                }
-                else
-                {
-                    db.Add(remoto);
-                }
+                db.UpdateConfirmacao(remoto);
 
             }
         }

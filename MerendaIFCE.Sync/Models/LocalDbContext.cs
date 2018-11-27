@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MerendaIFCE.Sync.Models
@@ -14,6 +15,35 @@ namespace MerendaIFCE.Sync.Models
         public DbSet<Confirmacao> Confirmacoes { get; set; }
 
         public DbSet<Usuario> Usuario { get; set; }
+
+        public void UpdateInscricao(Inscricao inscricao)
+        {
+            if (Inscricoes.Include(i => i.Dias).SingleOrDefault(i => i.Id == inscricao.Id) is Inscricao local)
+            {
+                RemoveRange(local.Dias);
+
+                Entry(local).CurrentValues.SetValues(inscricao);
+                Entry(local).Collection(l => l.Dias).CurrentValue = inscricao.Dias;
+            }
+            else
+            {
+                Add(inscricao
+);
+            }
+        }
+
+        public void UpdateConfirmacao(Confirmacao confirmacao)
+        {
+            if (Confirmacoes.SingleOrDefault(i => i.IdRemoto == confirmacao.IdRemoto) is Confirmacao local)
+            {
+                confirmacao.Id = local.Id;
+                Entry(local).CurrentValues.SetValues(confirmacao);
+            }
+            else
+            {
+                Add(confirmacao);
+            }
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
