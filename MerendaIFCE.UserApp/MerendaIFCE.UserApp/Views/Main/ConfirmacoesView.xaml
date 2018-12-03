@@ -30,7 +30,7 @@
             <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Hoje.Mensagem}" IsVisible="{Binding Hoje.Mensagem,Converter={StaticResource NullCheckValueConverter}}"></Label>
             
             <Label Grid.Row="2" Grid.Column="0" Text="Você vai almoçar hoje?"></Label>
-            <Switch Grid.Row="2" Grid.Column="1" IsToggled="{Binding Hoje.Cancela,Converter={StaticResource NegatedValueConverter}}"></Switch>
+            <Switch Grid.Row="2" Grid.Column="1" IsToggled="{Binding Hoje.Cancela,Converter={StaticResource NegatedValueConverter}}" Toggled="CancelaSwitch_Toggled"></Switch>
         </Grid>
 
         <ListView Grid.Row="2" ItemsSource="{Binding Confirmacoes}">

@@ -115,6 +115,35 @@ namespace MerendaIFCE.WebApp.ApiControllers
                 .Take(20);
         }
 
+        [HttpPut("Confirmacoes/{id}")]
+        [Authorize(Roles = Constants.UserRole)]
+        public IActionResult PutConfirmacao(int id, [FromBody]Confirmacao confirmacao)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (id != confirmacao.Id)
+            {
+                return BadRequest();
+            }
+            if (confirmacao.InscricaoId != GetUser().Inscricao.Id)
+            {
+                return BadRequest();
+            }
+            
+            if (_context.Confirmacoes.SingleOrDefault(c => c.Id == confirmacao.Id) is Confirmacao local)
+            {
+                _context.Entry(local).State = EntityState.Detached;
+                _context.Entry(confirmacao).State = EntityState.Modified;
+                confirmacao.UltimaModificacao = DateTimeOffset.Now;
+
+                _context.SaveChanges();
+                return Ok(confirmacao);
+            }
+            return BadRequest();
+        }
+
         #region NonAction
         // GET: api/Inscricoes/5
         [HttpGet("{id}")]

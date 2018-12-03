@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using MerendaIFCE.UserApp.Services;
+using MerendaIFCE.UserApp.Exceptions;
 
 namespace MerendaIFCE.UserApp.Views.Main
 {
@@ -15,7 +16,6 @@ namespace MerendaIFCE.UserApp.Views.Main
         private Confirmacao hoje;
         private IEnumerable<Confirmacao> _confirmacoes;
         private IList<Confirmacao> confirmacoes;
-        
         public Confirmacao Hoje
         {
             get { return hoje; }
@@ -52,6 +52,20 @@ namespace MerendaIFCE.UserApp.Views.Main
             }
 
             LoadLocal();
+        }
+
+        public async Task UpdateCancelamento()
+        {
+            try
+            {
+                var ws = new WebService();
+                Hoje = await ws.PutConfirmacaoAsync(Hoje);
+                AppDbContext.Instance.UpdteConfirmacao(Hoje);
+            }
+            catch (ServerException)
+            {
+                Hoje.Cancela = !Hoje.Cancela;
+            }
         }
 
         private void LoadLocal()

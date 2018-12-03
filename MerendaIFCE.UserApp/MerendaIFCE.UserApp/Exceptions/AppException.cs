@@ -25,6 +25,11 @@ namespace MerendaIFCE.UserApp.Exceptions
         {
         }
 
+        public virtual async Task HandleAsync()
+        {
+            await HandleAsync(App.Current.MainPage);
+        }
+
         public virtual async Task HandleAsync(Page page)
         {
             await page.DisplayAlert("Erro", Message, "Ok");
