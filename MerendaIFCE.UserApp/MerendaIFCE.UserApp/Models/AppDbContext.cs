@@ -81,9 +81,14 @@ namespace MerendaIFCE.UserApp.Models
         public List<Confirmacao> GetConfirmacoes() => 
             db.Table<Confirmacao>().OrderByDescending(c => c.UltimaModificacao).Take(20).ToList();
 
-        public void AddConfirmacoes(IEnumerable<Confirmacao> confirmacoes)
+        public void AddConfirmacao(Confirmacao confirmacao)
         {
-            db.InsertAll(confirmacoes);
+            db.Insert(confirmacao);
+        }
+
+        public void UpdteConfirmacao(Confirmacao confirmacao)
+        {
+            db.Update(confirmacao);
         }
     }
 }

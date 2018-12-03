@@ -2,20 +2,41 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MerendaIFCE.UserApp.Views.Main.ConfirmacoesView"
+             Title="Confirmações"
              Appearing="ContentPage_Appearing"
              IsBusy="{Binding IsBusy}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Text="Confirmações Recentes"></Label>
+        <Label Grid.Row="0" Text="Confirmações"></Label>
 
-        <ListView Grid.Row="1" ItemsSource="{Binding Confirmacoes}">
+        <Grid Grid.Row="1" IsVisible="{Binding Hoje, Converter={StaticResource NullCheckValueConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Text="HOJE"></Label>
+
+            <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Hoje.Mensagem}" IsVisible="{Binding Hoje.Mensagem,Converter={StaticResource NullCheckValueConverter}}"></Label>
+            
+            <Label Grid.Row="2" Grid.Column="0" Text="Você vai almoçar hoje?"></Label>
+            <Switch Grid.Row="2" Grid.Column="1" IsToggled="{Binding Hoje.Cancela,Converter={StaticResource NegatedValueConverter}}"></Switch>
+        </Grid>
+
+        <ListView Grid.Row="2" ItemsSource="{Binding Confirmacoes}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Mensagem}" Detail="{Binding UltimaModificacao,StringFormat='{0:d}'}"></TextCell>
+                    <TextCell Text="{Binding Dia,StringFormat='{0:d}'}" Detail="{Binding Mensagem}"></TextCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

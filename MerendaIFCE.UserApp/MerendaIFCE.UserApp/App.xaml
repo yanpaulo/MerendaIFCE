@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:c="clr-namespace:MerendaIFCE.UserApp.Converters"
+             xmlns:converters="clr-namespace:MerendaIFCE.UserApp.Converters"
              x:Class="MerendaIFCE.UserApp.App">
 	<Application.Resources>
 		<ResourceDictionary>
@@ -12,6 +12,13 @@
                 <Setter Property="BarTextColor" Value="White" />
             </Style>
         </ResourceDictionary>
-        <c:NegatedValueConverter x:Key="NegatedValueConverter"></c:NegatedValueConverter>
-	</Application.Resources>
+
+        <converters:BoolToTextValueConverter x:Key="BoolToTextValueConverter"></converters:BoolToTextValueConverter>
+        <converters:NegatedValueConverter x:Key="NegatedValueConverter"></converters:NegatedValueConverter>
+        <converters:IntGreaterThanValueConverter x:Key="IntGreaterThanValueConverter"></converters:IntGreaterThanValueConverter>
+        <converters:NullCheckValueConverter x:Key="NullCheckValueConverter"></converters:NullCheckValueConverter>
+        <converters:EqualsValueConverter x:Key="EqualsValueConverter"></converters:EqualsValueConverter>
+        <converters:NumericValueConverter x:Key="NumericValueConverter"></converters:NumericValueConverter>
+
+    </Application.Resources>
 </Application>
