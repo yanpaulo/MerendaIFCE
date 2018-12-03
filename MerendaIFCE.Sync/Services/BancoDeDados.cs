@@ -12,11 +12,11 @@ namespace MerendaIFCE.Sync.Services
     {
         public static async Task AtualizaAsync()
         {
-            var ws = new SyncWebService();
             using (var db = new LocalDbContext())
             {
                 db.Database.Migrate();
 
+                var ws = new SyncWebService();
                 await AtualizaInscricoes(db, ws);
                 await AtualizaConfirmacoes(db, ws);
 
