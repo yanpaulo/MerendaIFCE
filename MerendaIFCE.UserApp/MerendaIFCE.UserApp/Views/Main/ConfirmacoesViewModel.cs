@@ -65,6 +65,7 @@ namespace MerendaIFCE.UserApp.Views.Main
             catch (ServerException)
             {
                 Hoje.Cancela = !Hoje.Cancela;
+                OnPropertyChanged(nameof(Hoje));
             }
         }
 
