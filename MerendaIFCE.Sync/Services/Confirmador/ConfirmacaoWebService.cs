@@ -142,7 +142,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
             }
             catch (HttpRequestException ex)
             {
-                throw new ServerException($"Erro ao se conectar ao servidor ${client.BaseAddress}", ex);
+                throw new ServerException($"Erro ao se conectar ao servidor {client.BaseAddress}", ex);
             }
 
         }

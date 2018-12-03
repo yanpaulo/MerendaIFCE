@@ -12,6 +12,8 @@ namespace MerendaIFCE.Sync.DTO
 
         public DateTimeOffset Dia { get; set; }
 
+        public string Mensagem { get; set; }
+
         public int InscricaoId { get; set; }
 
         public StatusConfirmacao StatusConfirmacao { get; set; }

@@ -42,9 +42,10 @@ namespace MerendaIFCE.Sync.Services
                             await ConfirmacaoWebService.Instance.ConfirmaAsync(confirmacao);
                             confirmacao.StatusConfirmacao = StatusConfirmacao.Confirmado;
                         }
-                        catch (ApplicationException ex)
+                        catch (ServerException ex)
                         {
                             Console.WriteLine(ex.Message);
+                            confirmacao.Mensagem = "Erro no servidor de confirmação";
                             confirmacao.StatusConfirmacao = StatusConfirmacao.Erro;
                         }
                         confirmacao.StatusSincronia = StatusSincronia.Modificado;
