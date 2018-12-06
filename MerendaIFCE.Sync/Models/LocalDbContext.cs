@@ -34,6 +34,10 @@ namespace MerendaIFCE.Sync.Models
 
         public void UpdateConfirmacao(Confirmacao confirmacao)
         {
+            if (confirmacao.Id != 0 && confirmacao.IdRemoto == 0)
+            {
+                throw new InvalidOperationException("Id local é diferente de zero mas id remoto é zero. Que porra é essa??");
+            }
             if (Confirmacoes.SingleOrDefault(i => i.IdRemoto == confirmacao.IdRemoto) is Confirmacao local)
             {
                 confirmacao.Id = local.Id;
