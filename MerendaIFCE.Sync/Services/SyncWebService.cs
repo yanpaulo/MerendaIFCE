@@ -113,9 +113,12 @@ namespace MerendaIFCE.Sync.Services
                 else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized && logIn)
                 {
                     await LogInAsync();
-                    await RequestAsync(method, false);
+                    return await RequestAsync(method, false);
                 }
-                throw new ServerException(response, content);
+                else
+                {
+                    throw new ServerException(response, content); 
+                }
 
             }
             catch (HttpRequestException ex)

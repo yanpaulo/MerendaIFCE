@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using log4net;
 using MerendaIFCE.Sync.DTO;
 using MerendaIFCE.Sync.Models;
 using System;
@@ -9,8 +10,12 @@ namespace MerendaIFCE.Sync.Services
 {
     public class Mapeamentos
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Mapeamentos));
+
         public static void Configura()
         {
+            log.Debug("Configurando mapeamentos.");
+
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<Confirmacao, ConfirmacaoDTO>()

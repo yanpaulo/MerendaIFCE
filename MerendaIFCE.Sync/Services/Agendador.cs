@@ -1,4 +1,5 @@
-﻿using MerendaIFCE.Sync.Services.Jobs;
+﻿using log4net;
+using MerendaIFCE.Sync.Services.Jobs;
 using Quartz;
 using Quartz.Impl;
 using System;
@@ -8,13 +9,26 @@ using System.Threading.Tasks;
 
 namespace MerendaIFCE.Sync.Services
 {
-    public class Agendamento
+    public class Agendador
     {
-        public async static Task Inicializa()
+
+        private static ILog log = LogManager.GetLogger(typeof(Agendador));
+        private IScheduler scheduler;
+        private Agendador() { }
+
+        public static Agendador Instance { get; private set; }
+
+        public async static Task InicializaAsync()
         {
+            log.Debug($"Inicializando {nameof(Agendador)}");
+            if (Instance != null)
+            {
+                throw new InvalidOperationException($"{nameof(Agendador)}.{nameof(InicializaAsync)} já foi chamado anteriormente.");
+            }
+            Instance = new Agendador();
+
             var factory = new StdSchedulerFactory();
-            var scheduler = await factory.GetScheduler();
-            await scheduler.Start();
+            Instance.scheduler = await factory.GetScheduler();
 
             var criacaoTrigger = TriggerBuilder.Create()
                 .WithDailyTimeIntervalSchedule(builder =>
@@ -22,7 +36,7 @@ namespace MerendaIFCE.Sync.Services
                         .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(7, 0))
                         .OnMondayThroughFriday()
                         .WithIntervalInSeconds(30)
-                        .EndingDailyAt(TimeOfDay.HourAndMinuteOfDay(11, 30)))
+                        .EndingDailyAt(TimeOfDay.HourAndMinuteOfDay(18, 00)))
                 .Build();
 
             var confirmacaoTrigger = TriggerBuilder.Create()
@@ -39,7 +53,20 @@ namespace MerendaIFCE.Sync.Services
                 { JobBuilder.Create<CriadorJob>().Build(), new[]{ criacaoTrigger } },
             };
 
-            await scheduler.ScheduleJobs(tj, true);
+            await Instance.scheduler.ScheduleJobs(tj, true);
+        }
+
+        public async Task IniciaAsync()
+        {
+            log.Debug("Iniciando agendamentos.");
+            await scheduler.Start();
+        }
+
+        public async Task ParaAsync()
+        {
+            log.Debug("Parando agendamentos.");
+
+            await scheduler.Shutdown();
         }
     }
 }

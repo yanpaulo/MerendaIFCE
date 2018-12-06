@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using MerendaIFCE.Sync.Models;
 using Microsoft.AspNetCore.SignalR.Client;
+using log4net;
 
 namespace MerendaIFCE.Sync.Services
 {
     public class Sincronizador
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Sincronizador));
+
         private static Task<string> GetToken()
         {
             using (var db = new LocalDbContext())
@@ -20,6 +23,8 @@ namespace MerendaIFCE.Sync.Services
 
         public static async Task InicializaAsync()
         {
+            log.Debug("Inicializando Sincronizador");
+
             var connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:7354/sync", options =>
                 {

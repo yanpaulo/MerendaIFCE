@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net.Config;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,13 @@ namespace MerendaIFCE.Sync.LocalApp
     {
         static async Task Main(string[] args)
         {
-            await App.Current.InitAsync();
+            BasicConfigurator.Configure();
+
+            var app = App.Current;
+            await app.InitializaAsync();
+            await app.IniciaAsync();
+
+            await Task.Delay(TimeSpan.FromMinutes(5));
         }
     }
 }
