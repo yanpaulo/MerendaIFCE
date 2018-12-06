@@ -29,6 +29,7 @@ namespace MerendaIFCE.Sync.Services
                 .Build();
             
             connection.On<Inscricao>("InscricaoChanged", AtualizaInscricao);
+            connection.On<Confirmacao>("ConfirmacaoChanged", AtualizaConfirmacao);
 
             connection.Closed += async error =>
             {
@@ -46,6 +47,15 @@ namespace MerendaIFCE.Sync.Services
             using (var db = new LocalDbContext())
             {
                 db.UpdateInscricao(inscricao);
+                db.SaveChanges();
+            }
+        }
+
+        private static void AtualizaConfirmacao(Confirmacao confirmacao)
+        {
+            using (var db = new LocalDbContext())
+            {
+                db.UpdateConfirmacao(confirmacao);
                 db.SaveChanges();
             }
         }
