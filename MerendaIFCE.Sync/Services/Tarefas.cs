@@ -12,7 +12,7 @@ namespace MerendaIFCE.Sync.Services
 {
     public class Tarefas
     {
-        public async Task CriaConfirmacoesAsync()
+        public static async Task CriaConfirmacoesAsync()
         {
             using (var db = new LocalDbContext())
             {
@@ -49,7 +49,7 @@ namespace MerendaIFCE.Sync.Services
             }
         }
 
-        public async Task ExecutaConfirmacoesAsync()
+        public static async Task ExecutaConfirmacoesAsync()
         {
             using (var db = new LocalDbContext())
             {

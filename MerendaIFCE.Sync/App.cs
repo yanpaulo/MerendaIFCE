@@ -21,7 +21,8 @@ namespace MerendaIFCE.Sync
             Mapeamentos.Configura();
             await BancoDeDados.AtualizaAsync();
             await Sincronizador.InicializaAsync();
-            await new Tarefas().ExecutaConfirmacoesAsync();
+            await Agendamento.Inicializa();
+            await Task.Delay(TimeSpan.FromSeconds(300));
         }
 
         private void Configura()
