@@ -10,10 +10,14 @@ namespace MerendaIFCE.WebApp.Services
     public class SyncHub : Hub
     {
         public const string InscricaoChanged = "InscricaoChanged";
+        public const string ConfirmacaoChanged = "ConfirmacaoChanged";
 
-        public async Task NotifyInscricaoCHanged(Inscricao inscricao)
+        public override async Task OnConnectedAsync()
         {
-            await Clients.All.SendAsync(InscricaoChanged, inscricao);
+            if (Context.User.IsInRole(Constants.SyncRole))
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, Constants.SyncRole);
+            }
         }
     }
 }

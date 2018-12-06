@@ -117,7 +117,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
         [HttpPut("Confirmacoes/{id}")]
         [Authorize(Roles = Constants.UserRole)]
-        public IActionResult PutConfirmacao(int id, [FromBody]Confirmacao confirmacao)
+        public async Task<IActionResult> PutConfirmacao(int id, [FromBody]Confirmacao confirmacao)
         {
             if (!ModelState.IsValid)
             {
@@ -137,8 +137,10 @@ namespace MerendaIFCE.WebApp.ApiControllers
                 _context.Entry(local).State = EntityState.Detached;
                 _context.Entry(confirmacao).State = EntityState.Modified;
                 confirmacao.UltimaModificacao = DateTimeOffset.Now;
-
                 _context.SaveChanges();
+
+                await HubSend(SyncHub.ConfirmacaoChanged, confirmacao);
+
                 return Ok(confirmacao);
             }
             return BadRequest();
@@ -249,9 +251,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
         private async Task HubSend(string method, object arg)
         {
-            var users = await userManager.GetUsersInRoleAsync(Constants.SyncRole);
-            var clients = _hubContext.Clients.Users(users.Select(u => u.UserName).ToList());
-            await clients.SendAsync(method, arg);
+            await _hubContext.Clients.Group(Constants.SyncRole).SendAsync(method, arg);
         }
 
         private bool InscricaoExists(int id)
