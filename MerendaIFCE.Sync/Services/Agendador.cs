@@ -11,7 +11,6 @@ namespace MerendaIFCE.Sync.Services
 {
     public class Agendador
     {
-
         private static ILog log = LogManager.GetLogger(typeof(Agendador));
         private IScheduler scheduler;
         private Agendador() { }

@@ -17,28 +17,17 @@ namespace MerendaIFCE.Sync.Services
         {
             log.Debug("Atualizando banco de dados.");
 
-            try
+            using (var db = new LocalDbContext())
             {
-                using (var db = new LocalDbContext())
-                {
-                    db.Database.Migrate();
+                db.Database.Migrate();
 
-                    var ws = new SyncWebService();
-                    await AtualizaInscricoes(db, ws);
-                    await AtualizaConfirmacoes(db, ws);
+                var ws = new SyncWebService();
+                await AtualizaInscricoes(db, ws);
+                await AtualizaConfirmacoes(db, ws);
 
-                    db.SaveChanges();
-                }
+                db.SaveChanges();
             }
-            //Tipos conhecidos de exceção.
-            catch (ServerException)
-            {
-                throw;
-            }
-            catch (DbUpdateException)
-            {
-                throw;
-            }
+            //Tipos conhecidos de exceção: ServerException, DbUpdateException
         }
 
         private static async Task AtualizaInscricoes(LocalDbContext db, SyncWebService ws)
