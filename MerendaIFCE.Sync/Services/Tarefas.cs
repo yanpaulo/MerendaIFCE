@@ -57,7 +57,7 @@ namespace MerendaIFCE.Sync.Services
                 var ws = new SyncWebService();
 
                 var listaSync = new List<Confirmacao>();
-                var confirmacoes = db.Confirmacoes.Where(c => !c.Cancela && c.Dia == today);
+                var confirmacoes = db.Confirmacoes.Include(c => c.Inscricao).Where(c => !c.Cancela && c.Dia == today);
 
                 foreach (var confirmacao in confirmacoes)
                 {
@@ -87,6 +87,10 @@ namespace MerendaIFCE.Sync.Services
                 }
 
                 listaSync = await PostConfirmacoesAsync(listaSync);
+                foreach (var item in listaSync)
+                {
+                    db.Entry(item).State = EntityState.Detached;
+                }
                 db.UpdateRange(listaSync);
 
                 db.SaveChanges();
