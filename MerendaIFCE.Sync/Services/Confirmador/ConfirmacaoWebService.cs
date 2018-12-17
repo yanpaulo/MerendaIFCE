@@ -135,7 +135,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
                 if (refreshToken)
                 {
                     await AtualizaTokensAsync();
-                    await RequestAsync(method, false);
+                    return await RequestAsync(method, false);
                 }
                 throw new ServerException(response, content);
 
