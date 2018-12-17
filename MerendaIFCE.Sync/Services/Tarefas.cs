@@ -86,23 +86,19 @@ namespace MerendaIFCE.Sync.Services
                     confirmacao.StatusSincronia = StatusSincronia.Sincronizado;
                 }
 
-                await PostConfirmacoesAsync(listaSync);
+                listaSync = await PostConfirmacoesAsync(listaSync);
+                db.UpdateRange(listaSync);
 
                 db.SaveChanges();
             }
         }
 
-        private static async Task PostConfirmacoesAsync(List<Confirmacao> confirmacoes)
+        private static async Task<List<Confirmacao>> PostConfirmacoesAsync(List<Confirmacao> confirmacoes)
         {
             try
             {
                 var ws = new SyncWebService();
-                var result = await ws.PostConfirmacoesAsync(confirmacoes);
-                for (int i = 0; i < result.Count; i++)
-                {
-                    confirmacoes[i].IdRemoto = result[i].Id;
-                }
-
+                return await ws.PostConfirmacoesAsync(confirmacoes);
             }
             catch (ServerException ex)
             {
@@ -111,7 +107,10 @@ namespace MerendaIFCE.Sync.Services
                 {
                     item.StatusSincronia = StatusSincronia.Erro;
                 }
+
+                return confirmacoes;
             }
+
         }
     }
 }

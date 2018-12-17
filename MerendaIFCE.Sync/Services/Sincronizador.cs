@@ -60,6 +60,7 @@ namespace MerendaIFCE.Sync.Services
         {
             using (var db = new LocalDbContext())
             {
+                confirmacao.Id = 0;
                 confirmacao.IdRemoto = confirmacao.Id;
                 db.UpdateConfirmacao(confirmacao);
                 db.SaveChanges();

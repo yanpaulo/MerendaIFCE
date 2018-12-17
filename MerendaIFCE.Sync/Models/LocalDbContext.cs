@@ -27,8 +27,7 @@ namespace MerendaIFCE.Sync.Models
             }
             else
             {
-                Add(inscricao
-);
+                Add(inscricao);
             }
         }
 

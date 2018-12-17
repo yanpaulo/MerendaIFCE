@@ -66,12 +66,20 @@ namespace MerendaIFCE.Sync.Services
             return Mapper.Map<List<Confirmacao>>(list);
         }
 
-        public async Task<IList<ConfirmacaoDTO>> PostConfirmacoesAsync(IEnumerable<Confirmacao> confirmacoes)
+        public async Task<List<Confirmacao>> PostConfirmacoesAsync(IList<Confirmacao> confirmacoes)
         {
             var list = Mapper.Map<List<ConfirmacaoDTO>>(confirmacoes);
             var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
             var content = new StringContent(JsonConvert.SerializeObject(list, settings), Encoding.UTF8, JsonContentType);
-            return await RequestAsync<List<ConfirmacaoDTO>>(client.PostAsync, "Confirmacoes", content);
+            var response = await RequestAsync<List<ConfirmacaoDTO>>(client.PostAsync, "Confirmacoes", content);
+            var result = Mapper.Map<List<Confirmacao>>(response);
+
+            for (int i = 0; i < result.Count; i++)
+            {
+                result[i].Id = confirmacoes[i].Id;
+                result[i].StatusSincronia = confirmacoes[i].StatusSincronia;
+            }
+            return result;
         }
         
         private async Task<T> RequestAsync<T>(Func<string, Task<HttpResponseMessage>> method, string url)
