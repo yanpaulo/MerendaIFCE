@@ -22,17 +22,17 @@ namespace MerendaIFCE.WebApp.ApiControllers
     {
         private readonly ApplicationDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly TokenConfigurations tokenConfigurations;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly TokenService<ApplicationUser> tokenService;
 
-        public ContaController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, TokenConfigurations tokenConfigurations, RoleManager<IdentityRole> roleManager)
+        public ContaController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, TokenService<ApplicationUser> tokenService)
         {
             this.context = context;
             this.userManager = userManager;
-            this.signInManager = signInManager;
-            this.tokenConfigurations = tokenConfigurations;
             this.roleManager = roleManager;
+            this.signInManager = signInManager;
+            this.tokenService = tokenService;
         }
 
         [HttpPost("Login")]
@@ -53,7 +53,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                     var result = new LoginResult
                     {
                         Login = user.UserName,
-                        Token = await GetToken(user),
+                        Token = await tokenService.GetToken(user),
                         Inscricao = user.Inscricao
                     };
                     return Ok(result);
@@ -95,7 +95,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                     {
                         Login = user.Email,
                         Inscricao = user.Inscricao,
-                        Token = await GetToken(user)
+                        Token = await tokenService.GetToken(user)
                     };
 
                     return Ok(response);
@@ -125,40 +125,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                 }
             }
         }
-
-        private async Task<string> GetToken(ApplicationUser model)
-        {
-            var now = DateTime.UtcNow;
-            var roles = await userManager.GetRolesAsync(model);
-            
-            var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-                new Claim(JwtRegisteredClaimNames.UniqueName, model.UserName),
-            };
-
-            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
-            
-            ClaimsIdentity identity = new ClaimsIdentity( new GenericIdentity(model.UserName), claims);
-
-            var handler = new JwtSecurityTokenHandler();
-            var securityToken = handler.CreateToken(new SecurityTokenDescriptor
-            {
-                Issuer = tokenConfigurations.Issuer,
-                Audience = tokenConfigurations.Audience,
-                Expires = now.AddMonths(1),
-                IssuedAt = now,
-                
-                SigningCredentials = tokenConfigurations.SigningCredentials,
-                Subject = identity
-            });
-            
-
-            var token = handler.WriteToken(securityToken);
-
-            return token;
-        }
-
+        
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)

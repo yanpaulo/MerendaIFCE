@@ -35,17 +35,14 @@ namespace MerendaIFCE.WebApp
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            var tokenConfigurations = new TokenConfigurations();
-            services.AddSingleton(tokenConfigurations);
+            services.AddSingleton<TokenConfigurations>();
+            services.AddTransient<TokenService<ApplicationUser>>();
 
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
+            services.AddAuthentication()
                 .AddJwtBearer(bearerOptions =>
                 {
-                    bearerOptions.TokenValidationParameters = tokenConfigurations.TokenValidationParameters;
+                    bearerOptions.TokenValidationParameters =
+                        services.BuildServiceProvider().GetService<TokenConfigurations>().TokenValidationParameters;
                 });
 
             services.AddSignalR();
