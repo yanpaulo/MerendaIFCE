@@ -12,9 +12,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MerendaIFCE.WebApp.ApiControllers
 {
-    [Produces("application/json")]
     [Route("api/Notificacoes")]
-    [Authorize]
+    [Produces("application/json")]
     public class NotificacoesController : Controller
     {
         private readonly ApplicationDbContext db;
@@ -64,7 +63,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                     break;
                 case PlataformaNotificacao.GCM:
                     template = "{\"data\":{\"message\":\"$(message)\"}}";
-                    registration = new GcmTemplateRegistrationDescription(model.Handle, template);
+                    registration = new FcmTemplateRegistrationDescription(model.Handle, template);
                     break;
                 case PlataformaNotificacao.APNS:
                     template = "{\"aps\":{\"alert\":\"$(message)\"}}";

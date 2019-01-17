@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MerendaIFCE.WebApp.Services
 {
-    public class TokenConfigurations
+    public class TokenConfiguration
     {
         public string Issuer { get; set; } = "MerendaIFCE.Issuer";
 
@@ -21,7 +21,7 @@ namespace MerendaIFCE.WebApp.Services
         public TokenValidationParameters TokenValidationParameters { get; set; }
 
 
-        public TokenConfigurations()
+        public TokenConfiguration()
         {
             SecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("C1EF72ED-164A-4EBC-8170-6FA1861D518B"));
             SigningCredentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256);

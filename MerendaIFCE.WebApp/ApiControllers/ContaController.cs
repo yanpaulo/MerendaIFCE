@@ -13,11 +13,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MerendaIFCE.WebApp.ApiControllers
 {
-    [Produces("application/json")]
+    [AllowAnonymous]
     [Route("api/Conta")]
+    [Produces("application/json")]
     public class ContaController : Controller
     {
         private readonly ApplicationDbContext context;

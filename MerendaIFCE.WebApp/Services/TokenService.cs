@@ -15,9 +15,9 @@ namespace MerendaIFCE.WebApp.Services
     public class TokenService<T> where T : IdentityUser
     {
         private readonly UserManager<T> userManager;
-        private readonly TokenConfigurations tokenConfigurations;
+        private readonly TokenConfiguration tokenConfigurations;
 
-        public TokenService(TokenConfigurations tokenConfigurations, UserManager<T> userManager)
+        public TokenService(TokenConfiguration tokenConfigurations, UserManager<T> userManager)
         {
             this.tokenConfigurations = tokenConfigurations;
             this.userManager = userManager;

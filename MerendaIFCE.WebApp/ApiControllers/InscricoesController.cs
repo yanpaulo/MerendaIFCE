@@ -13,8 +13,8 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MerendaIFCE.WebApp.ApiControllers
 {
-    [Produces("application/json")]
     [Route("api/Inscricoes")]
+    [Produces("application/json")]
     public class InscricoesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -31,7 +31,6 @@ namespace MerendaIFCE.WebApp.ApiControllers
         // GET: api/Inscricoes
         [HttpGet]
         [Authorize(Roles = Constants.SyncRole)]
-        //[Authorize]
         public IEnumerable<Inscricao> GetInscricoes(DateTimeOffset? alteracao = null)
         {
             return _context.Inscricoes.Include(i => i.Dias)
@@ -75,12 +74,12 @@ namespace MerendaIFCE.WebApp.ApiControllers
             return BadRequest(ModelState);
         }
 
-        [HttpDelete("{idInscricao}/Dias/{idDia}")]
+        [HttpDelete("{id}/Dias/{idDia}")]
         [Authorize(Roles = Constants.UserRole)]
-        public async Task<IActionResult> DeleteInscricaoDia(int idInscricao, int idDia)
+        public async Task<IActionResult> DeleteInscricaoDia(int id, int idDia)
         {
             var user = GetUser();
-            if (user.Inscricao.Id != idInscricao)
+            if (user.Inscricao.Id != id)
             {
                 ModelState.AddModelError("", "Não é possível alterar a inscrição de outro usuário, espertinho.");
             }
@@ -101,7 +100,6 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
             return BadRequest(ModelState);
         }
-
 
         [HttpGet("Confirmacoes")]
         [Authorize(Roles = Constants.UserRole)]

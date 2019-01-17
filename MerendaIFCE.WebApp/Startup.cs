@@ -11,8 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MerendaIFCE.WebApp.Models;
 using MerendaIFCE.WebApp.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MerendaIFCE.WebApp
 {
@@ -35,18 +35,6 @@ namespace MerendaIFCE.WebApp
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddSingleton<TokenConfigurations>();
-            services.AddTransient<TokenService<ApplicationUser>>();
-
-            services.AddAuthentication()
-                .AddJwtBearer(bearerOptions =>
-                {
-                    bearerOptions.TokenValidationParameters =
-                        services.BuildServiceProvider().GetService<TokenConfigurations>().TokenValidationParameters;
-                });
-
-            services.AddSignalR();
-
             services.Configure<IdentityOptions>(opt =>
             {
                 opt.Password = new PasswordOptions
@@ -59,12 +47,24 @@ namespace MerendaIFCE.WebApp
                 };
             });
 
-            // Add application services.
-            services.AddTransient<IEmailSender, EmailSender>();
-
             services.AddSingleton<NotificationService>();
+            services.AddSingleton<TokenConfiguration>();
+            services.AddSingleton<IAuthorizationPolicyProvider, AppPolicyProvider>();
 
-            services.AddMvc();
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<TokenService<ApplicationUser>>();
+
+            services
+                .AddAuthentication()
+                .AddJwtBearer(jwt =>
+                    jwt.TokenValidationParameters =
+                        services.BuildServiceProvider().GetService<TokenConfiguration>().TokenValidationParameters)
+                .AddCookie();
+
+            services.AddSignalR();
+            services
+                .AddMvc(opt => opt.Filters.Add(new AuthorizeFilter()))
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,16 +72,19 @@ namespace MerendaIFCE.WebApp
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                //app.UseExceptionHandler("/Home/Error"); // Template 2.0
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
             }
 
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCookiePolicy();
 
             app.UseAuthentication();
 
@@ -90,12 +93,14 @@ namespace MerendaIFCE.WebApp
                 routes.MapHub<SyncHub>("/sync");
             });
 
+            //Template 2.0
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            //app.UseMvc();
         }
     }
 }
