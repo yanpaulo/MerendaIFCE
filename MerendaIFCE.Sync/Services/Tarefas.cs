@@ -7,11 +7,14 @@ using Microsoft.EntityFrameworkCore;
 using MerendaIFCE.Sync.Services;
 using System.Threading.Tasks;
 using MerendaIFCE.Sync.Services.Confirmador;
+using log4net;
 
 namespace MerendaIFCE.Sync.Services
 {
     public class Tarefas
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Tarefas));
+
         public static async Task CriaConfirmacoesAsync()
         {
             using (var db = new LocalDbContext())
@@ -44,8 +47,14 @@ namespace MerendaIFCE.Sync.Services
                     confirmacao.StatusSincronia = StatusSincronia.Sincronizado;
                 }
 
-                await PostConfirmacoesAsync(listaSync);
-                db.SaveChanges();
+                if (listaSync.Any())
+                {
+                    log.Info("Enviando confirmações:");
+                    log.Info(listaSync);
+                    await PostConfirmacoesAsync(listaSync);
+                    db.SaveChanges();
+                    log.Info("Confirmações sincronizadas.");
+                }
             }
         }
 
@@ -59,18 +68,20 @@ namespace MerendaIFCE.Sync.Services
                 var listaSync = new List<Confirmacao>();
                 var confirmacoes = db.Confirmacoes.Where(c => !c.Cancela && c.Dia == today);
 
+                log.Info("Realizando confirmações:");
                 foreach (var confirmacao in confirmacoes)
                 {
                     if (confirmacao.StatusConfirmacao != StatusConfirmacao.Confirmado)
                     {
                         try
                         {
+                            log.Info(confirmacao);
                             await ConfirmacaoWebService.Instance.ConfirmaAsync(confirmacao);
                             confirmacao.StatusConfirmacao = StatusConfirmacao.Confirmado;
                         }
                         catch (ServerException ex)
                         {
-                            Console.WriteLine(ex.Message);
+                            log.Error(ex);
                             confirmacao.Mensagem = "Erro no servidor de confirmação";
                             confirmacao.StatusConfirmacao = StatusConfirmacao.Erro;
                         }
@@ -86,9 +97,14 @@ namespace MerendaIFCE.Sync.Services
                     confirmacao.StatusSincronia = StatusSincronia.Sincronizado;
                 }
 
-                await PostConfirmacoesAsync(listaSync);
-
-                db.SaveChanges();
+                if (listaSync.Any())
+                {
+                    log.Info("Enviando confirmações:");
+                    log.Info(listaSync);
+                    await PostConfirmacoesAsync(listaSync);
+                    db.SaveChanges();
+                    log.Info("Confirmações sincronizadas.");
+                }
             }
         }
 
