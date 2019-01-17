@@ -1,9 +1,7 @@
-﻿using log4net.Config;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+
+using log4net.Config;
 
 namespace MerendaIFCE.Sync.LocalApp
 {
@@ -17,7 +15,10 @@ namespace MerendaIFCE.Sync.LocalApp
             await app.InitializaAsync();
             await app.IniciaAsync();
 
-            await Task.Delay(TimeSpan.FromMinutes(5));
+            while (true)
+            {
+                Console.ReadKey();
+            }
         }
     }
 }
