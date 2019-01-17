@@ -77,7 +77,6 @@ namespace MerendaIFCE.WebApp
             }
             else
             {
-                //app.UseExceptionHandler("/Home/Error"); // Template 2.0
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
@@ -93,14 +92,8 @@ namespace MerendaIFCE.WebApp
                 routes.MapHub<SyncHub>("/sync");
             });
 
-            //Template 2.0
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
-            //app.UseMvc();
+
+            app.UseMvcWithDefaultRoute();
         }
     }
 }
