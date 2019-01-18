@@ -17,7 +17,7 @@ namespace MerendaIFCE.UserApp
         public App()
         {
             InitializeComponent();
-            MainPage = new RootPage();
+            MainPage = new StartupPage();
         }
 
         protected override void OnStart()
