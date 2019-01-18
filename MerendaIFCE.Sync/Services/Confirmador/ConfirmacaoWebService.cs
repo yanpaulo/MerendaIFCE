@@ -31,6 +31,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
             return lista.FirstOrDefault();
         }
 
+#if !MOCK
         public async Task<Refeicao> GetRefeicaoAsync()
         {
             if (this.refeicao?.Data == App.Current.Today)
@@ -42,9 +43,9 @@ namespace MerendaIFCE.Sync.Services.Confirmador
             {
                 new KeyValuePair<string, string>("data", App.Current.Today.ToString("yyyy-MM-dd"))
             });
-            
+
             var content = await RequestAsync(client.PostAsync, "refeicao/filtrar", data);
-            
+
             content = content
                 .Replace(@"""[", "[")
                 .Replace(@"]""", "]")
@@ -75,7 +76,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
 
             const string url = "refeicao/pedido";
             var content = await RequestAsync(client.PostAsync, url, data);
-            
+
             try
             {
                 confirmacao.Mensagem = GetValueOrContent(content, "id", "aviso-msg");
@@ -85,6 +86,20 @@ namespace MerendaIFCE.Sync.Services.Confirmador
                 throw new ServerException($"A URL ({client.BaseAddress}/{url}) não retornou o conteúdo esperado", ex);
             }
         }
+#else
+        public Task<Refeicao> GetRefeicaoAsync() => Task.FromResult(new Refeicao
+        {
+            Id = 1,
+            Nome = "Sopa de olho com víboras",
+            Data = DateTimeOffset.Now
+        });
+
+        public Task ConfirmaAsync(Confirmacao confirmacao, int retry = 1)
+        {
+            confirmacao.Mensagem = "Refeição confirmada.";
+            return Task.CompletedTask;
+        }
+#endif
 
 
         private string GetValueOrContent(string html, string attr, string nome)

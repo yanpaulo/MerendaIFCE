@@ -50,6 +50,7 @@ namespace MerendaIFCE.Sync.Services
             var tj = new Dictionary<IJobDetail, IReadOnlyCollection<ITrigger>>
             {
                 { JobBuilder.Create<CriadorJob>().Build(), new[]{ criacaoTrigger } },
+                { JobBuilder.Create<ConfirmadorJob>().Build(), new[]{ confirmacaoTrigger } },
             };
 
             await Instance.scheduler.ScheduleJobs(tj, true);
