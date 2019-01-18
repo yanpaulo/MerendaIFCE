@@ -39,6 +39,7 @@ namespace MerendaIFCE.UserApp
         protected override void OnSleep()
         {
             // Handle when your app sleeps
+            Current.SavePropertiesAsync();
         }
 
         protected override void OnResume()
