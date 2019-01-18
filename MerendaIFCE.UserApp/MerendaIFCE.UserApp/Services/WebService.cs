@@ -16,6 +16,7 @@ namespace MerendaIFCE.UserApp.Services
         private HttpClient client = new HttpClient
         {
             BaseAddress = new Uri("http://localhost:7354/api/")
+            //BaseAddress = new Uri("http://10.0.2.2:7354/api/") //Android debug
         };
 
         public WebService()
