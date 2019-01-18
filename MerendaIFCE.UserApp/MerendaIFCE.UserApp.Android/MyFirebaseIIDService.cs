@@ -27,6 +27,7 @@ namespace MerendaIFCE.UserApp.Droid
             Log.Debug(TAG, "FCM token: " + refreshedToken);
 
             App.Current.Properties[PushService.PnsKey] = refreshedToken;
+            App.Current.SavePropertiesAsync();
         }
 
 
