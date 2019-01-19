@@ -67,7 +67,8 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
                     return Created($"{inscricao.Id}/Dias/{dia.Id}", dia);
                 }
-                
+
+                dia = inscricao.Dias.Single(d => d.Dia == dia.Dia);
                 return Ok(dia);
             }
 
