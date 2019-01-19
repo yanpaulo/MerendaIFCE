@@ -15,8 +15,11 @@ namespace MerendaIFCE.UserApp.Services
         private const string JsonContentType = "application/json";
         private HttpClient client = new HttpClient
         {
+#if AVD
+            BaseAddress = new Uri("http://10.0.2.2:7354/api/")
+#else
             BaseAddress = new Uri("http://localhost:7354/api/")
-            //BaseAddress = new Uri("http://10.0.2.2:7354/api/") //Android debug
+#endif
         };
 
         public WebService()
