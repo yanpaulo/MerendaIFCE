@@ -23,7 +23,7 @@ namespace MerendaIFCE.UserApp.Droid.Services
         {
             return Task.FromResult(new CanalPush
             {
-                Plataforma = PlataformaPush.WNS,
+                Plataforma = PlataformaPush.GCM,
                 Handle = App.Current.Properties[PnsKey] as string
             });
         }
