@@ -66,7 +66,7 @@ namespace MerendaIFCE.Sync.Services
                 var ws = new SyncWebService();
 
                 var listaSync = new List<Confirmacao>();
-                var confirmacoes = db.Confirmacoes.Where(c => !c.Cancela && c.Dia == today);
+                var confirmacoes = db.Confirmacoes.Where(c => !c.Cancela && c.Dia == today.ToUniversalTime()).ToList();
 
                 log.Info("Realizando confirmações:");
                 foreach (var confirmacao in confirmacoes)
