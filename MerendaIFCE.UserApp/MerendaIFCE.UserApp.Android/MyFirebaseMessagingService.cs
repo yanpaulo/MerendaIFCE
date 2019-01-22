@@ -45,7 +45,7 @@ namespace MerendaIFCE.UserApp.Droid
             intent.AddFlags(ActivityFlags.ClearTop);
             var pendingIntent = PendingIntent.GetActivity(this, 0, intent, PendingIntentFlags.OneShot);
 
-            var notificationBuilder = new NotificationCompat.Builder(this)
+            var notificationBuilder = new NotificationCompat.Builder(this, "{204A0CA8-0AA3-4427-B8CC-25F8F5A5A6AA}")
                         .SetContentTitle("FCM Message")
                         .SetSmallIcon(Resource.Drawable.xamarin_logo)
                         .SetContentText(messageBody)
