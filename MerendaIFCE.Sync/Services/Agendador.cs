@@ -33,7 +33,7 @@ namespace MerendaIFCE.Sync.Services
                 .WithDailyTimeIntervalSchedule(builder =>
                     builder
                         .OnMondayThroughFriday()
-                        .WithIntervalInSeconds(10)
+                        .WithIntervalInSeconds(30)
                     )
                 .Build();
 

@@ -51,7 +51,7 @@ namespace MerendaIFCE.Sync.Services
                 {
                     log.Info("Enviando confirmações:");
                     log.Info(listaSync);
-                    await PostConfirmacoesAsync(listaSync);
+                    await PostConfirmacoesAsync(listaSync, db);
                     db.SaveChanges();
                     log.Info("Confirmações sincronizadas.");
                 }
@@ -66,7 +66,7 @@ namespace MerendaIFCE.Sync.Services
                 var ws = new SyncWebService();
 
                 var listaSync = new List<Confirmacao>();
-                var confirmacoes = db.Confirmacoes.Where(c => !c.Cancela && c.Dia == today.ToUniversalTime()).ToList();
+                var confirmacoes = db.Confirmacoes.Where(c => !c.Cancela && c.Dia.ToUniversalTime() == today.ToUniversalTime()).ToList();
 
                 log.Info("Realizando confirmações:");
                 foreach (var confirmacao in confirmacoes)
@@ -101,14 +101,14 @@ namespace MerendaIFCE.Sync.Services
                 {
                     log.Info("Enviando confirmações:");
                     log.Info(listaSync);
-                    await PostConfirmacoesAsync(listaSync);
+                    await PostConfirmacoesAsync(listaSync, db);
                     db.SaveChanges();
                     log.Info("Confirmações sincronizadas.");
                 }
             }
         }
 
-        private static async Task PostConfirmacoesAsync(List<Confirmacao> confirmacoes)
+        private static async Task PostConfirmacoesAsync(List<Confirmacao> confirmacoes, LocalDbContext db)
         {
             try
             {
@@ -116,7 +116,17 @@ namespace MerendaIFCE.Sync.Services
                 var result = await ws.PostConfirmacoesAsync(confirmacoes);
                 for (int i = 0; i < result.Count; i++)
                 {
-                    confirmacoes[i].IdRemoto = result[i].Id;
+                    var confirmacao = confirmacoes[i];
+                    var id = confirmacao.Id;
+
+                    if (db.Entry(confirmacao).State == EntityState.Detached)
+                    {
+                        db.Add(confirmacao);
+                    }
+                    db.Entry(confirmacao).CurrentValues.SetValues(result[i]);
+
+                    confirmacao.IdRemoto = confirmacao.Id;
+                    confirmacao.Id = id;
                 }
 
             }
