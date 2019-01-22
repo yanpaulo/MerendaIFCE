@@ -107,7 +107,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
         public IEnumerable<Confirmacao> GetConfirmacoes([FromQuery]DateTimeOffset? alteracao = null)
         {
             var user = GetUser();
-            
+
             return _context.Confirmacoes
                 .OrderByDescending(c => c.UltimaModificacao)
                 .Where(c => c.InscricaoId == user.Inscricao.Id && (alteracao == null || c.UltimaModificacao > alteracao))
@@ -130,17 +130,24 @@ namespace MerendaIFCE.WebApp.ApiControllers
             {
                 return BadRequest();
             }
-            
+
             if (_context.Confirmacoes.SingleOrDefault(c => c.Id == confirmacao.Id) is Confirmacao local)
             {
-                _context.Entry(local).State = EntityState.Detached;
-                _context.Entry(confirmacao).State = EntityState.Modified;
-                confirmacao.UltimaModificacao = DateTimeOffset.Now;
-                _context.SaveChanges();
+                if (confirmacao.UltimaModificacao > local.UltimaModificacao)
+                {
+                    _context.Entry(local).State = EntityState.Detached;
+                    _context.Entry(confirmacao).State = EntityState.Modified;
+                    confirmacao.UltimaModificacao = DateTimeOffset.Now;
+                    _context.SaveChanges();
 
-                await HubSend(SyncHub.ConfirmacaoChanged, confirmacao);
+                    await HubSend(SyncHub.ConfirmacaoChanged, confirmacao);
+                    return Ok(confirmacao);
+                }
+                else
+                {
+                    return Ok(local);
+                }
 
-                return Ok(confirmacao);
             }
             return BadRequest();
         }
