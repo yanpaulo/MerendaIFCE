@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace MerendaIFCE.WebApp.Services
 {
@@ -27,7 +28,7 @@ namespace MerendaIFCE.WebApp.Services
             }
             else
             {
-                policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                policy = new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
             }
 
             return Task.FromResult(policy);

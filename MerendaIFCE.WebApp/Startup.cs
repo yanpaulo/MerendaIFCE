@@ -13,6 +13,7 @@ using MerendaIFCE.WebApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace MerendaIFCE.WebApp
 {
@@ -55,7 +56,11 @@ namespace MerendaIFCE.WebApp
             services.AddTransient<TokenService<ApplicationUser>>();
 
             services
-                .AddAuthentication()
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(jwt =>
                     jwt.TokenValidationParameters =
                         services.BuildServiceProvider().GetService<TokenConfiguration>().TokenValidationParameters)
@@ -81,7 +86,7 @@ namespace MerendaIFCE.WebApp
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
