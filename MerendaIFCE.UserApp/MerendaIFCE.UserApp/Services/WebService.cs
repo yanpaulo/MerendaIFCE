@@ -15,10 +15,10 @@ namespace MerendaIFCE.UserApp.Services
         private const string JsonContentType = "application/json";
         private HttpClient client = new HttpClient
         {
-#if AVD
-            BaseAddress = new Uri("http://10.0.2.2:7354/api/")
-#elif DEMO
+#if DEMO 
             BaseAddress = new Uri("http://almoco.yan-soft.com/api/")
+#elif AVD
+            BaseAddress = new Uri("http://10.0.2.2:7354/api/")
 #else
             BaseAddress = new Uri("http://localhost:7354/api/")
 #endif
