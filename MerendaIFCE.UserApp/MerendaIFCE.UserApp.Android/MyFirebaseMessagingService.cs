@@ -45,7 +45,11 @@ namespace MerendaIFCE.UserApp.Droid
             intent.AddFlags(ActivityFlags.ClearTop);
             var pendingIntent = PendingIntent.GetActivity(this, 0, intent, PendingIntentFlags.OneShot);
 
-            var notificationBuilder = new NotificationCompat.Builder(this, "{204A0CA8-0AA3-4427-B8CC-25F8F5A5A6AA}")
+
+
+            const string ChannelId = "{204A0CA8-0AA3-4427-B8CC-25F8F5A5A6AA}";
+
+            var notificationBuilder = new NotificationCompat.Builder(this, ChannelId)
                         .SetContentTitle("FCM Message")
                         .SetSmallIcon(Resource.Drawable.xamarin_logo)
                         .SetContentText(messageBody)
@@ -53,6 +57,16 @@ namespace MerendaIFCE.UserApp.Droid
                         .SetContentIntent(pendingIntent);
 
             var notificationManager = NotificationManager.FromContext(this);
+
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            {
+                var channel = notificationManager.GetNotificationChannel(ChannelId);
+                if (channel == null)
+                {
+                    channel = new NotificationChannel(ChannelId, "Alertas", NotificationImportance.High);
+                    notificationManager.CreateNotificationChannel(channel);
+                }
+            }
 
             notificationManager.Notify(0, notificationBuilder.Build());
         }
