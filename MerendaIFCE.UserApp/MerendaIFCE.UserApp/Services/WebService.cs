@@ -17,6 +17,8 @@ namespace MerendaIFCE.UserApp.Services
         {
 #if AVD
             BaseAddress = new Uri("http://10.0.2.2:7354/api/")
+#elif DEMO
+            BaseAddress = new Uri("http://almoco.yan-soft.com/api/")
 #else
             BaseAddress = new Uri("http://localhost:7354/api/")
 #endif

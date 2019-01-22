@@ -31,7 +31,20 @@ namespace MerendaIFCE.Sync.Services.Confirmador
             return lista.FirstOrDefault();
         }
 
-#if !MOCK
+#if MOCK
+        public Task<Refeicao> GetRefeicaoAsync() => Task.FromResult(new Refeicao
+        {
+            Id = 1,
+            Nome = "Sopa de olho com víboras",
+            Data = DateTimeOffset.Now
+        });
+
+        public Task ConfirmaAsync(Confirmacao confirmacao, int retry = 1)
+        {
+            confirmacao.Mensagem = "Refeição confirmada.";
+            return Task.CompletedTask;
+        }
+#else
         public async Task<Refeicao> GetRefeicaoAsync()
         {
             if (this.refeicao?.Data == App.Current.Today)
@@ -85,19 +98,6 @@ namespace MerendaIFCE.Sync.Services.Confirmador
             {
                 throw new ServerException($"A URL ({client.BaseAddress}/{url}) não retornou o conteúdo esperado", ex);
             }
-        }
-#else
-        public Task<Refeicao> GetRefeicaoAsync() => Task.FromResult(new Refeicao
-        {
-            Id = 1,
-            Nome = "Sopa de olho com víboras",
-            Data = DateTimeOffset.Now
-        });
-
-        public Task ConfirmaAsync(Confirmacao confirmacao, int retry = 1)
-        {
-            confirmacao.Mensagem = "Refeição confirmada.";
-            return Task.CompletedTask;
         }
 #endif
 

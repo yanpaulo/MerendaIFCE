@@ -23,7 +23,11 @@ namespace MerendaIFCE.Sync.Services
         {
             client = new HttpClient
             {
+#if DEMO
+                BaseAddress = new Uri("http://almoco.yan-soft.com/api/")
+#else
                 BaseAddress = new Uri("http://localhost:7354/api/")
+#endif
             };
             using (var db = new LocalDbContext())
             {

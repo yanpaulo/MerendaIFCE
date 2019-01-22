@@ -32,19 +32,21 @@ namespace MerendaIFCE.Sync.Services
             var criacaoTrigger = TriggerBuilder.Create()
                 .WithDailyTimeIntervalSchedule(builder =>
                     builder
-                        .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(7, 0))
                         .OnMondayThroughFriday()
-                        .WithIntervalInSeconds(30)
-                        .EndingDailyAt(TimeOfDay.HourAndMinuteOfDay(18, 00)))
+                        .WithIntervalInSeconds(10)
+                    )
                 .Build();
 
             var confirmacaoTrigger = TriggerBuilder.Create()
                 .WithDailyTimeIntervalSchedule(builder =>
                     builder
-                        .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(10, 0))
                         .OnMondayThroughFriday()
-                        .WithIntervalInSeconds(30)
-                        .EndingDailyAt(TimeOfDay.HourAndMinuteOfDay(10, 30)))
+                        .WithIntervalInSeconds(60)
+#if HORARIO_CONFIRMACAO
+                        .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(10, 0))
+                        .EndingDailyAt(TimeOfDay.HourAndMinuteOfDay(10, 30))
+#endif
+                )
                 .Build();
 
             var tj = new Dictionary<IJobDetail, IReadOnlyCollection<ITrigger>>

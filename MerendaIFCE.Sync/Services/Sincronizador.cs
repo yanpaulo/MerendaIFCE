@@ -11,6 +11,12 @@ namespace MerendaIFCE.Sync.Services
 {
     public class Sincronizador
     {
+#if DEMO
+        private const string Url = "http://almoco.yan-soft.com/sync"; 
+#else
+        private const string Url = "http://localhost:7354/sync";
+#endif
+
         private static readonly ILog log = LogManager.GetLogger(typeof(Sincronizador));
 
         private static Task<string> GetToken()
@@ -26,7 +32,7 @@ namespace MerendaIFCE.Sync.Services
             log.Debug("Inicializando Sincronizador");
 
             var connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:7354/sync", options =>
+                .WithUrl(Url, options =>
                 {
 
                     options.AccessTokenProvider = GetToken;
