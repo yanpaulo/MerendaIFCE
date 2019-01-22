@@ -124,9 +124,9 @@ namespace MerendaIFCE.Sync.Services
                         db.Add(confirmacao);
                     }
                     db.Entry(confirmacao).CurrentValues.SetValues(result[i]);
+                    db.Entry(confirmacao).Property(c => c.Id).IsModified = false;
 
                     confirmacao.IdRemoto = confirmacao.Id;
-                    confirmacao.Id = id;
                 }
 
             }
