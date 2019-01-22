@@ -26,7 +26,7 @@ namespace MerendaIFCE.Sync.Services
 
                 foreach (var dia in dias)
                 {
-                    var confirmacao = dia.Inscricao.Confirmacoes.FirstOrDefault(d => d.Dia == today);
+                    var confirmacao = dia.Inscricao.Confirmacoes.FirstOrDefault(d => d.Dia == today.ToUniversalTime());
 
                     if (confirmacao == null)
                     {
