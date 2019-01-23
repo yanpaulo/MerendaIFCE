@@ -1,4 +1,5 @@
-﻿using MerendaIFCE.UserApp.Views.Main;
+﻿using MerendaIFCE.UserApp.Views.Conta;
+using MerendaIFCE.UserApp.Views.Main;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -36,6 +37,7 @@ namespace MerendaIFCE.UserApp.Views
                 {
                     new RootPageMenuItem { Id = 0, Title = "Confirmações", TargetType = typeof(ConfirmacoesView) },
                     new RootPageMenuItem { Id = 1, Title = "Dias", TargetType = typeof(SelecaoDiasPage) },
+                    new RootPageMenuItem { Id = 1, Title = "Sair", TargetType = typeof(LogoutPage) },
                 });
             }
             

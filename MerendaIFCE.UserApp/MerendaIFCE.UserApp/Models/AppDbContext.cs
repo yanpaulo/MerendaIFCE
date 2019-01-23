@@ -90,5 +90,13 @@ namespace MerendaIFCE.UserApp.Models
         {
             db.Update(confirmacao);
         }
+
+        public void LimpaDados()
+        {
+            db.DeleteAll<Usuario>();
+            db.DeleteAll<Inscricao>();
+            db.DeleteAll<InscricaoDia>();
+            db.DeleteAll<Confirmacao>();
+        }
     }
 }
