@@ -33,7 +33,7 @@
             <Switch Grid.Row="2" Grid.Column="1" IsToggled="{Binding Hoje.Cancela,Converter={StaticResource NegatedValueConverter}}" Toggled="CancelaSwitch_Toggled"></Switch>
         </Grid>
 
-        <ListView Grid.Row="2" ItemsSource="{Binding Confirmacoes}">
+        <ListView Grid.Row="2" ItemsSource="{Binding Confirmacoes}" IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding RefreshCommand}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextCell Text="{Binding Dia,StringFormat='{0:d}'}" Detail="{Binding Mensagem}"></TextCell>

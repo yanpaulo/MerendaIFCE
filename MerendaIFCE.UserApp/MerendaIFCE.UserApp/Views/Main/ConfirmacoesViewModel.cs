@@ -8,19 +8,43 @@ using System.Threading.Tasks;
 using System.Linq;
 using MerendaIFCE.UserApp.Services;
 using MerendaIFCE.UserApp.Exceptions;
+using Xamarin.Forms;
 
 namespace MerendaIFCE.UserApp.Views.Main
 {
     public class ConfirmacoesViewModel : BusyObject
     {
+        private bool isRefreshing;
         private Confirmacao hoje;
         private IEnumerable<Confirmacao> _confirmacoes;
         private IList<Confirmacao> confirmacoes;
+
         public Confirmacao Hoje
         {
             get { return hoje; }
             set { hoje = value; OnPropertyChanged(); }
         }
+
+
+        public bool IsRefreshing
+        {
+            get { return isRefreshing; }
+            set { isRefreshing = value; OnPropertyChanged(); }
+        }
+
+
+        public Command RefreshCommand => new Command(async () =>
+        {
+            try
+            {
+                IsRefreshing = true;
+                await LoadAsync();
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
+        });
 
         public IList<Confirmacao> Confirmacoes
         {

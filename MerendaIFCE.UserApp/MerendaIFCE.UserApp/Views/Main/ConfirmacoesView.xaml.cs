@@ -24,7 +24,7 @@ namespace MerendaIFCE.UserApp.Views.Main
         {
             await viewModel.LoadAsync();
         }
-
+        
         private async void CancelaSwitch_Toggled(object sender, ToggledEventArgs e)
         {
             var element = sender as Switch;
@@ -43,5 +43,7 @@ namespace MerendaIFCE.UserApp.Views.Main
                 } 
             }
         }
+
+        
     }
 }
