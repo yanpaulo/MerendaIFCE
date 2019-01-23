@@ -5,6 +5,7 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Media;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
@@ -45,16 +46,23 @@ namespace MerendaIFCE.UserApp.Droid
             intent.AddFlags(ActivityFlags.ClearTop);
             var pendingIntent = PendingIntent.GetActivity(this, 0, intent, PendingIntentFlags.OneShot);
 
-
+            var soundUri = RingtoneManager.GetDefaultUri(RingtoneType.Ringtone);
+            var bigTextStyle = new NotificationCompat.BigTextStyle();
+            bigTextStyle.SetSummaryText("Almoço");
+            bigTextStyle.BigText(messageBody);
 
             const string ChannelId = "{204A0CA8-0AA3-4427-B8CC-25F8F5A5A6AA}";
 
             var notificationBuilder = new NotificationCompat.Builder(this, ChannelId)
-                        .SetContentTitle("FCM Message")
-                        .SetSmallIcon(Resource.Drawable.xamarin_logo)
+                        .SetTicker("Almoço")
+                        .SetContentTitle("Almoço")
                         .SetContentText(messageBody)
+                        .SetSmallIcon(Resource.Mipmap.icon)
+                        .SetStyle(bigTextStyle)
                         .SetAutoCancel(true)
-                        .SetContentIntent(pendingIntent);
+                        .SetContentIntent(pendingIntent)
+                        .SetPriority(NotificationCompat.PriorityMax)
+                        .SetDefaults((int)NotificationDefaults.All);
 
             var notificationManager = NotificationManager.FromContext(this);
 
