@@ -55,6 +55,7 @@ namespace MerendaIFCE.Sync.Services
 
         private static void AtualizaInscricao(Inscricao inscricao)
         {
+            log.Info("Inscrição alterada no servidor.");
             using (var db = new LocalDbContext())
             {
                 db.UpdateInscricao(inscricao);
@@ -64,6 +65,7 @@ namespace MerendaIFCE.Sync.Services
 
         private static void AtualizaConfirmacao(Confirmacao confirmacao)
         {
+            log.Info("Confirmação alterada no servidor.");
             using (var db = new LocalDbContext())
             {
                 confirmacao.IdRemoto = confirmacao.Id;
