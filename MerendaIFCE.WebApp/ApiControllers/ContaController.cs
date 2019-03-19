@@ -26,9 +26,9 @@ namespace MerendaIFCE.WebApp.ApiControllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly TokenService<ApplicationUser> tokenService;
+        private readonly TokenService tokenService;
 
-        public ContaController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, TokenService<ApplicationUser> tokenService)
+        public ContaController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, TokenService tokenService)
         {
             this.context = context;
             this.userManager = userManager;
@@ -55,7 +55,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                     var result = new LoginResult
                     {
                         Login = user.UserName,
-                        Token = await tokenService.GetToken(user),
+                        Token = await tokenService.GetToken<ApplicationUser>(user, userManager),
                         Inscricao = user.Inscricao
                     };
                     return Ok(result);
@@ -97,7 +97,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                     {
                         Login = user.Email,
                         Inscricao = user.Inscricao,
-                        Token = await tokenService.GetToken(user)
+                        Token = await tokenService.GetToken<ApplicationUser>(user, userManager)
                     };
 
                     return Ok(response);

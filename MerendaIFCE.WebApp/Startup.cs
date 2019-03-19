@@ -49,22 +49,19 @@ namespace MerendaIFCE.WebApp
             });
 
             services.AddSingleton<NotificationService>();
-            services.AddSingleton<TokenConfiguration>();
+            services.AddSingleton<TokenService>();
             services.AddSingleton<IAuthorizationPolicyProvider, AppPolicyProvider>();
 
             services.AddTransient<IEmailSender, EmailSender>();
-            services.AddTransient<TokenService<ApplicationUser>>();
 
             services
-                .AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
+                .AddAuthentication()
                 .AddJwtBearer(jwt =>
                     jwt.TokenValidationParameters =
-                        services.BuildServiceProvider().GetService<TokenConfiguration>().TokenValidationParameters)
+                        services.BuildServiceProvider().GetService<TokenService>().TokenValidationParameters)
                 .AddCookie();
+
+            services.AddSingleton<IAuthorizationPolicyProvider, AppPolicyProvider>();
 
             services.AddSignalR();
             services

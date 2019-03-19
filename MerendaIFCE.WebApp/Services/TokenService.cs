@@ -1,29 +1,49 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Security.Principal;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Security.Principal;
+using System.Text;
+using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-
-namespace MerendaIFCE.WebApp.Services
+namespace MerendaIFCE.WebApp
 {
-    public class TokenService<T> where T : IdentityUser
+    public class TokenService
     {
-        private readonly UserManager<T> userManager;
-        private readonly TokenConfiguration tokenConfigurations;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public TokenService(TokenConfiguration tokenConfigurations, UserManager<T> userManager)
+        public string Issuer { get; set; } = "Almoco.Issuer";
+
+        public string Audience { get; set; } = "Almoco.Audience";
+
+        public SecurityKey SecurityKey { get; set; }
+
+        public SigningCredentials SigningCredentials { get; set; }
+
+        public TokenValidationParameters TokenValidationParameters { get; set; }
+
+        public TokenService()
         {
-            this.tokenConfigurations = tokenConfigurations;
-            this.userManager = userManager;
+            SecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("{FDA1690C-AE1D-426E-9B36-D58042C2DC68}"));
+            SigningCredentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256);
+
+            TokenValidationParameters = new TokenValidationParameters
+            {
+                IssuerSigningKey = SecurityKey,
+                ValidAudience = Audience,
+                ValidIssuer = Issuer,
+
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
         }
 
-        public async Task<string> GetToken(T user)
+        public async Task<string> GetToken<T>(T user, UserManager<T> userManager) where T : IdentityUser
         {
             var now = DateTime.UtcNow;
             var roles = await userManager.GetRolesAsync(user);
@@ -41,11 +61,12 @@ namespace MerendaIFCE.WebApp.Services
             var handler = new JwtSecurityTokenHandler();
             var securityToken = handler.CreateToken(new SecurityTokenDescriptor
             {
-                Issuer = tokenConfigurations.Issuer,
-                Audience = tokenConfigurations.Audience,
+                Issuer = Issuer,
+                Audience = Audience,
                 Expires = now.AddMonths(1),
                 IssuedAt = now,
-                SigningCredentials = tokenConfigurations.SigningCredentials,
+
+                SigningCredentials = SigningCredentials,
                 Subject = identity
             });
 
