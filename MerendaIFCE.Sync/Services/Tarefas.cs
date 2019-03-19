@@ -8,6 +8,7 @@ using MerendaIFCE.Sync.Services;
 using System.Threading.Tasks;
 using MerendaIFCE.Sync.Services.Confirmador;
 using log4net;
+using Yansoft.Rest;
 
 namespace MerendaIFCE.Sync.Services
 {
@@ -79,7 +80,7 @@ namespace MerendaIFCE.Sync.Services
                             await ConfirmacaoWebService.Instance.ConfirmaAsync(confirmacao);
                             confirmacao.StatusConfirmacao = StatusConfirmacao.Confirmado;
                         }
-                        catch (ServerException ex)
+                        catch (RestException ex)
                         {
                             log.Error(ex);
                             confirmacao.Mensagem = "Erro no servidor de confirmação";
@@ -130,7 +131,7 @@ namespace MerendaIFCE.Sync.Services
                 }
 
             }
-            catch (ServerException ex)
+            catch (RestException ex)
             {
                 Console.WriteLine(ex.Message);
                 foreach (var item in confirmacoes)

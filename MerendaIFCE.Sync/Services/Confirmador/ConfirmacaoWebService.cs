@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Yansoft.Rest;
 
 namespace MerendaIFCE.Sync.Services.Confirmador
 {
@@ -126,7 +127,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
             }
             catch (InvalidOperationException ex)
             {
-                throw new ServerException($"A URL ({client.BaseAddress}) não retornou o conteúdo esperado", ex);
+                throw new RestException($"A URL ({client.BaseAddress}) não retornou o conteúdo esperado", ex);
             }
         }
 
@@ -152,12 +153,12 @@ namespace MerendaIFCE.Sync.Services.Confirmador
                     await AtualizaTokensAsync();
                     await RequestAsync(method, false);
                 }
-                throw new ServerException(response, content);
+                throw new RestException(response, content);
 
             }
             catch (HttpRequestException ex)
             {
-                throw new ServerException($"Erro ao se conectar ao servidor {client.BaseAddress}", ex);
+                throw new RestException($"Erro ao se conectar ao servidor {client.BaseAddress}", ex);
             }
 
         }
