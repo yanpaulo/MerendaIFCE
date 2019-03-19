@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MerendaIFCE.UserApp.UWP", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MerendaIFCE.UserApp", "MerendaIFCE.UserApp\MerendaIFCE.UserApp\MerendaIFCE.UserApp.csproj", "{DAC28834-016B-484A-9DC6-CC72FD3E7D52}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestHttpClient", "..\RestHttpClient\Source\RestHttpClient.csproj", "{F3D801A5-35A5-4173-80DA-09A5890F1600}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -207,30 +205,6 @@ Global
 		{DAC28834-016B-484A-9DC6-CC72FD3E7D52}.Release|x64.Build.0 = Release|Any CPU
 		{DAC28834-016B-484A-9DC6-CC72FD3E7D52}.Release|x86.ActiveCfg = Release|Any CPU
 		{DAC28834-016B-484A-9DC6-CC72FD3E7D52}.Release|x86.Build.0 = Release|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Debug|ARM.Build.0 = Debug|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Debug|iPhone.ActiveCfg = Debug|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Debug|iPhone.Build.0 = Debug|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Debug|x64.Build.0 = Debug|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Debug|x86.Build.0 = Debug|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Release|ARM.ActiveCfg = Release|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Release|ARM.Build.0 = Release|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Release|iPhone.ActiveCfg = Release|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Release|iPhone.Build.0 = Release|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Release|x64.ActiveCfg = Release|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Release|x64.Build.0 = Release|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Release|x86.ActiveCfg = Release|Any CPU
-		{F3D801A5-35A5-4173-80DA-09A5890F1600}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
