@@ -61,8 +61,6 @@ namespace MerendaIFCE.WebApp
                         services.BuildServiceProvider().GetService<TokenService>().TokenValidationParameters)
                 .AddCookie();
 
-            services.AddSingleton<IAuthorizationPolicyProvider, AppPolicyProvider>();
-
             services.AddSignalR();
             services
                 .AddMvc(opt => opt.Filters.Add(new AuthorizeFilter()))
