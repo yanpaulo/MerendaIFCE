@@ -124,7 +124,6 @@ namespace MerendaIFCE.Sync.Services.Confirmador
             try
             {
                 var content = await client.RestGetAsync<string>("");
-                //var content = await RequestAsync(async () => await client.GetAsync(""), false);
 
                 token = GetValueOrContent(content, "name", "_token");
                 client.DefaultRequestHeaders.Add("X-CSRF-TOKEN", token);
@@ -145,38 +144,5 @@ namespace MerendaIFCE.Sync.Services.Confirmador
 
             return response;
         }
-
-
-        //private async Task<string> RequestAsync(Func<string, Task<HttpResponseMessage>> method, string url) =>
-        //    await RequestAsync(async () => await method(url));
-
-        //private async Task<string> RequestAsync(Func<string, HttpContent, Task<HttpResponseMessage>> method, string url, HttpContent content) =>
-        //    await RequestAsync(async () => await method(url, content));
-
-        //private async Task<string> RequestAsync(Func<Task<HttpResponseMessage>> method, bool refreshToken = true)
-        //{
-        //    try
-        //    {
-        //        var response = await method();
-        //        var content = await response.Content.ReadAsStringAsync();
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            return content;
-        //        }
-        //        if (refreshToken)
-        //        {
-        //            await AtualizaTokensAsync();
-        //            await RequestAsync(method, false);
-        //        }
-        //        throw new RestException(null, response, content);
-
-        //    }
-        //    catch (HttpRequestException ex)
-        //    {
-        //        throw new InvalidOperationException($"Erro ao se conectar ao servidor {client.BaseAddress}", ex);
-        //    }
-
-        //}
-
     }
 }
