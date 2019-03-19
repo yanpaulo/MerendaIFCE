@@ -17,18 +17,21 @@ namespace MerendaIFCE.Sync.Services.Confirmador
         private Refeicao refeicao;
         private RestHttpClient client = new RestHttpClient
         {
-            BaseAddress = new Uri("http://intranet.maracanau.ifce.edu.br/ifce/ra/")
+            BaseAddress = new Uri("http://intranet.maracanau.ifce.edu.br/ifce/ra/"),
+            Deserializer = new StringOrObjectDeserializer()
         };
-        private ConfirmacaoWebService() { }
+
+        private ConfirmacaoWebService()
+        {
+            client.ErrorHandler = HandleErrorAsync;
+        }
 
         public static ConfirmacaoWebService Instance { get; private set; } = new ConfirmacaoWebService();
 
 
         public async Task<Aluno> GetAlunoAsync(string matricula)
         {
-            var content = await RequestAsync(client.GetAsync, $"{matricula}/1");
-
-            var lista = JsonConvert.DeserializeObject<List<Aluno>>(content);
+            var lista = await client.RestGetAsync<List<Aluno>>($"{matricula}/1");
             return lista.FirstOrDefault();
         }
 
@@ -58,7 +61,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
                 new KeyValuePair<string, string>("data", App.Current.Today.ToString("yyyy-MM-dd"))
             });
 
-            var content = await RequestAsync(client.PostAsync, "refeicao/filtrar", data);
+            var content = await client.RestPostAsync<string>("refeicao/filtrar", data);
 
             content = content
                 .Replace(@"""[", "[")
@@ -89,7 +92,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
             });
 
             const string url = "refeicao/pedido";
-            var content = await RequestAsync(client.PostAsync, url, data);
+            var content = await client.RestPostAsync<string>(url, data);
 
             try
             {
@@ -120,7 +123,8 @@ namespace MerendaIFCE.Sync.Services.Confirmador
         {
             try
             {
-                var content = await RequestAsync(async () => await client.GetAsync(""), false);
+                var content = await client.RestGetAsync<string>("");
+                //var content = await RequestAsync(async () => await client.GetAsync(""), false);
 
                 token = GetValueOrContent(content, "name", "_token");
                 client.DefaultRequestHeaders.Add("X-CSRF-TOKEN", token);
@@ -131,37 +135,48 @@ namespace MerendaIFCE.Sync.Services.Confirmador
             }
         }
 
-
-        private async Task<string> RequestAsync(Func<string, Task<HttpResponseMessage>> method, string url) =>
-            await RequestAsync(async () => await method(url));
-
-        private async Task<string> RequestAsync(Func<string, HttpContent, Task<HttpResponseMessage>> method, string url, HttpContent content) =>
-            await RequestAsync(async () => await method(url, content));
-
-        private async Task<string> RequestAsync(Func<Task<HttpResponseMessage>> method, bool refreshToken = true)
+        private async Task<HttpResponseMessage> HandleErrorAsync(HttpRequestMessage request, HttpResponseMessage response)
         {
-            try
+            if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
             {
-                var response = await method();
-                var content = await response.Content.ReadAsStringAsync();
-                if (response.IsSuccessStatusCode)
-                {
-                    return content;
-                }
-                if (refreshToken)
-                {
-                    await AtualizaTokensAsync();
-                    await RequestAsync(method, false);
-                }
-                throw new RestException(null, response, content);
-
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new InvalidOperationException($"Erro ao se conectar ao servidor {client.BaseAddress}", ex);
+                await AtualizaTokensAsync();
+                return await client.SendAsync(request.Clone());
             }
 
+            return response;
         }
+
+
+        //private async Task<string> RequestAsync(Func<string, Task<HttpResponseMessage>> method, string url) =>
+        //    await RequestAsync(async () => await method(url));
+
+        //private async Task<string> RequestAsync(Func<string, HttpContent, Task<HttpResponseMessage>> method, string url, HttpContent content) =>
+        //    await RequestAsync(async () => await method(url, content));
+
+        //private async Task<string> RequestAsync(Func<Task<HttpResponseMessage>> method, bool refreshToken = true)
+        //{
+        //    try
+        //    {
+        //        var response = await method();
+        //        var content = await response.Content.ReadAsStringAsync();
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            return content;
+        //        }
+        //        if (refreshToken)
+        //        {
+        //            await AtualizaTokensAsync();
+        //            await RequestAsync(method, false);
+        //        }
+        //        throw new RestException(null, response, content);
+
+        //    }
+        //    catch (HttpRequestException ex)
+        //    {
+        //        throw new InvalidOperationException($"Erro ao se conectar ao servidor {client.BaseAddress}", ex);
+        //    }
+
+        //}
 
     }
 }
