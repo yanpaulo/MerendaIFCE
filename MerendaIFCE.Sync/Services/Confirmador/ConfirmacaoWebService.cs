@@ -15,7 +15,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
     {
         private string token;
         private Refeicao refeicao;
-        private HttpClient client = new HttpClient
+        private RestHttpClient client = new RestHttpClient
         {
             BaseAddress = new Uri("http://intranet.maracanau.ifce.edu.br/ifce/ra/")
         };
@@ -70,7 +70,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
 
             if (refeicao == null)
             {
-                throw new ServerException("O servidor de confirmação não retornou refeições.");
+                throw new InvalidOperationException("O servidor de confirmação não retornou refeições.");
             }
 
             return this.refeicao = refeicao;
@@ -97,7 +97,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
             }
             catch (InvalidOperationException ex)
             {
-                throw new ServerException($"A URL ({client.BaseAddress}/{url}) não retornou o conteúdo esperado", ex);
+                throw new InvalidOperationException($"A URL ({client.BaseAddress}/{url}) não retornou o conteúdo esperado", ex);
             }
         }
 #endif
@@ -127,7 +127,7 @@ namespace MerendaIFCE.Sync.Services.Confirmador
             }
             catch (InvalidOperationException ex)
             {
-                throw new RestException($"A URL ({client.BaseAddress}) não retornou o conteúdo esperado", ex);
+                throw new InvalidOperationException($"A URL ({client.BaseAddress}) não retornou o conteúdo esperado", ex);
             }
         }
 
@@ -153,12 +153,12 @@ namespace MerendaIFCE.Sync.Services.Confirmador
                     await AtualizaTokensAsync();
                     await RequestAsync(method, false);
                 }
-                throw new RestException(response, content);
+                throw new RestException(null, response, content);
 
             }
             catch (HttpRequestException ex)
             {
-                throw new RestException($"Erro ao se conectar ao servidor {client.BaseAddress}", ex);
+                throw new InvalidOperationException($"Erro ao se conectar ao servidor {client.BaseAddress}", ex);
             }
 
         }
