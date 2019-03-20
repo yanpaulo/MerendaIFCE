@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:ext="clr-namespace:MerendaIFCE.UserApp.MarkupExtensions"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MerendaIFCE.UserApp.Views.Conta.CadastroPage">
     <Grid>
@@ -8,6 +9,16 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Image Grid.Row="1" Source="{ext:ImagePath 'logo.png'}"></Image>
+        </Grid>
 
         <StackLayout Grid.Row="1" IsEnabled="{Binding IsBusy,Converter={StaticResource NegatedValueConverter}}">
             <StackLayout>

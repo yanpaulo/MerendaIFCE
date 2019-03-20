@@ -1,45 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ext="clr-namespace:MerendaIFCE.UserApp.MarkupExtensions"
              x:Class="MerendaIFCE.UserApp.Views.RootPageMaster"
              Title="Master">
-  <StackLayout>
-    <ListView x:Name="MenuItemsListView"
+    <StackLayout BackgroundColor="{StaticResource NavigationPrimary}">
+        <ListView x:Name="MenuItemsListView"
               SeparatorVisibility="None"
               HasUnevenRows="true"
               ItemsSource="{Binding MenuItems}">
-      <ListView.Header>
-        <Grid BackgroundColor="#03A9F4">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="10"/>
-          </Grid.ColumnDefinitions>
-          <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="10"/>
-          </Grid.RowDefinitions>
-          <Label
-              Grid.Column="1"
-              Grid.Row="2"
-              Text="Almoço"
-              Style="{DynamicResource SubtitleStyle}"/>
-        </Grid>
-      </ListView.Header>
-      <ListView.ItemTemplate>
-        <DataTemplate>
-          <ViewCell>
-            <StackLayout Padding="15,10" HorizontalOptions="FillAndExpand">
-              <Label VerticalOptions="FillAndExpand" 
+            <ListView.Header>
+                <Grid BackgroundColor="GhostWhite" HeightRequest="160">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Image Grid.Row="1" Source="{ext:ImagePath 'logo.png'}"></Image>
+                </Grid>
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Padding="15,10" HorizontalOptions="FillAndExpand">
+                            <Label VerticalOptions="FillAndExpand" 
                     VerticalTextAlignment="Center" 
                     Text="{Binding Title}" 
                     FontSize="24"/>
-            </StackLayout>
-          </ViewCell>
-        </DataTemplate>
-      </ListView.ItemTemplate>
-    </ListView>
-  </StackLayout>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
 </ContentPage>
