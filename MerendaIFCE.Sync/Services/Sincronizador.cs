@@ -34,8 +34,7 @@ namespace MerendaIFCE.Sync.Services
             var connection = new HubConnectionBuilder()
                 .WithUrl(Url, options =>
                 {
-
-                    //options.AccessTokenProvider = GetToken;
+                    options.AccessTokenProvider = GetToken;
                 })
                 .Build();
             
