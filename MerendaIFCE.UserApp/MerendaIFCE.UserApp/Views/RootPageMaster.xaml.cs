@@ -37,7 +37,7 @@ namespace MerendaIFCE.UserApp.Views
                 {
                     new RootPageMenuItem { Id = 0, Title = "Confirmações", TargetType = typeof(ConfirmacoesView) },
                     new RootPageMenuItem { Id = 1, Title = "Dias", TargetType = typeof(SelecaoDiasPage) },
-                    new RootPageMenuItem { Id = 1, Title = "Sair", TargetType = typeof(LogoutPage) },
+                    new RootPageMenuItem { Id = 2, Title = "Sair", TargetType = typeof(LogoutPage) },
                 });
             }
             

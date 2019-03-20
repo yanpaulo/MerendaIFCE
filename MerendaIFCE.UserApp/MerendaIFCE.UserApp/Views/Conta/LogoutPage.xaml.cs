@@ -18,9 +18,10 @@ namespace MerendaIFCE.UserApp.Views.Conta
 			InitializeComponent();
 		}
 
-        private void ContentPage_Appearing(object sender, EventArgs e)
+        private async void ContentPage_Appearing(object sender, EventArgs e)
         {
             AppDbContext.Instance.LimpaDados();
+            await Task.Delay(500);
             App.Current.MainPage = new LoginPage();
         }
     }
