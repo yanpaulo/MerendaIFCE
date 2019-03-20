@@ -18,9 +18,11 @@ namespace MerendaIFCE.WebApp.Pages.Confirmacoes
         private readonly NotificationService _notificationService;
         private readonly IHubContext<SyncHub> _hubContext;
 
-        public EditModel(ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context, NotificationService notificationService, IHubContext<SyncHub> hubContext)
         {
             _context = context;
+            _notificationService = notificationService;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -51,7 +53,9 @@ namespace MerendaIFCE.WebApp.Pages.Confirmacoes
 
             Confirmacao.UltimaModificacao = DateTimeOffset.Now;
             _context.Attach(Confirmacao).State = EntityState.Modified;
-            
+            _context.Entry(Confirmacao).Property(c => c.Dia).IsModified = false;
+            _context.Entry(Confirmacao).Property(c => c.InscricaoId).IsModified = false;
+
             try
             {
                 await _context.SaveChangesAsync();

@@ -64,6 +64,7 @@ namespace MerendaIFCE.WebApp
             services.AddSignalR();
             services
                 .AddMvc(opt => opt.Filters.Add(new AuthorizeFilter()))
+                .AddRazorPagesOptions(opt => opt.Conventions.AllowAnonymousToFolder("/Confirmacoes"))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
