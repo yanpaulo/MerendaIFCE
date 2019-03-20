@@ -33,7 +33,7 @@ namespace MerendaIFCE.Sync.Services
                 ErrorHandler = HandleErrorAsync,
                 Converter = new JsonRestConverter
                 {
-                    SerializerSettings = new JsonSerializerSettings
+                    JsonSerializer = new JsonSerializer
                     {
                         NullValueHandling = NullValueHandling.Ignore
                     }
