@@ -51,9 +51,7 @@ namespace MerendaIFCE.WebApp
             services.AddSingleton<NotificationService>();
             services.AddSingleton<TokenService>();
             services.AddSingleton<IAuthorizationPolicyProvider, AppPolicyProvider>();
-
-            services.AddTransient<IEmailSender, EmailSender>();
-
+            
             services
                 .AddAuthentication()
                 .AddJwtBearer(jwt =>
@@ -61,10 +59,10 @@ namespace MerendaIFCE.WebApp
                         services.BuildServiceProvider().GetService<TokenService>().TokenValidationParameters)
                 .AddCookie();
 
+
             services.AddSignalR();
             services
                 .AddMvc(opt => opt.Filters.Add(new AuthorizeFilter()))
-                .AddRazorPagesOptions(opt => opt.Conventions.AllowAnonymousToFolder("/Confirmacoes"))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

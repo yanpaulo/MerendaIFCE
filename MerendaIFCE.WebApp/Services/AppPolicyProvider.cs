@@ -28,7 +28,7 @@ namespace MerendaIFCE.WebApp.Services
             }
             else
             {
-                policy = new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
+                policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
             }
 
             return Task.FromResult(policy);
