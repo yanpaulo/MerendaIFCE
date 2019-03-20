@@ -17,8 +17,8 @@ namespace MerendaIFCE.WebApp.Services
                 "AlmocoIFCE.NotificationHub");
         }
 
-        public async Task<NotificationOutcome> NotificaStatusRefeicaoAsync() =>
-            await Hub.SendTemplateNotificationAsync(new Dictionary<string, string> { { "message", "O status da sua refeição foi alterado." } });
+        public async Task<NotificationOutcome> NotificaStatusRefeicaoAsync(string matricula) =>
+            await Hub.SendTemplateNotificationAsync(new Dictionary<string, string> { { "message", "O status da sua refeição foi alterado." } }, $"matricula:{matricula}");
 
     }
 }

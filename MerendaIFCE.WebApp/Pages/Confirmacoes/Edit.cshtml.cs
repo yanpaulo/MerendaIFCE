@@ -61,7 +61,8 @@ namespace MerendaIFCE.WebApp.Pages.Confirmacoes
                 await _context.SaveChangesAsync();
 
                 Confirmacao = (Confirmacao)_context.Entry(Confirmacao).GetDatabaseValues().ToObject();
-                await _notificationService.NotificaStatusRefeicaoAsync();
+                var inscricao = _context.Inscricoes.Find(Confirmacao.InscricaoId);
+                await _notificationService.NotificaStatusRefeicaoAsync(inscricao.Matricula);
                 await _hubService.NotificaConfirmacaoAlteradaAsync(Confirmacao);
             }
             catch (DbUpdateConcurrencyException)
