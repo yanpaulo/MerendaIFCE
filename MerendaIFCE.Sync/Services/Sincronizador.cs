@@ -35,7 +35,7 @@ namespace MerendaIFCE.Sync.Services
                 .WithUrl(Url, options =>
                 {
 
-                    options.AccessTokenProvider = GetToken;
+                    //options.AccessTokenProvider = GetToken;
                 })
                 .Build();
             

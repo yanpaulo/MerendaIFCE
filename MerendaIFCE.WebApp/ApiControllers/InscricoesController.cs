@@ -257,7 +257,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
         private async Task HubSend(string method, object arg)
         {
-            await _hubContext.Clients.Group(Constants.SyncRole).SendAsync(method, arg);
+            await _hubContext.Clients.All.SendAsync(method, arg);
         }
 
         private bool InscricaoExists(int id)

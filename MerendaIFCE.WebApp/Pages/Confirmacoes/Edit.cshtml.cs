@@ -60,8 +60,10 @@ namespace MerendaIFCE.WebApp.Pages.Confirmacoes
             {
                 await _context.SaveChangesAsync();
 
+                Confirmacao = (Confirmacao)_context.Entry(Confirmacao).GetDatabaseValues().ToObject();
                 await _notificationService.Hub.SendTemplateNotificationAsync(new Dictionary<string, string> { { "message", "O status da sua refeição foi alterado." } });
-                await _hubContext.Clients.Group(Constants.SyncRole).SendAsync(SyncHub.ConfirmacaoChanged, Confirmacao);
+                await _hubContext.Clients.All.SendAsync(SyncHub.ConfirmacaoChanged, Confirmacao);
+                //await _hubContext.Clients.Group(Constants.SyncRole).SendAsync(SyncHub.ConfirmacaoChanged, Confirmacao);
             }
             catch (DbUpdateConcurrencyException)
             {
