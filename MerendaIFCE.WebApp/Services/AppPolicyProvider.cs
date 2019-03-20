@@ -7,12 +7,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 
 namespace MerendaIFCE.WebApp.Services
 {
     public class AppPolicyProvider : IAuthorizationPolicyProvider
     {
+        public const string SignalRPolicyName = "SignalRPolicy";
+
         private readonly IHttpContextAccessor httpContext;
+        private readonly AuthorizationPolicy jwtPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
+        private readonly AuthorizationPolicy cookiePolicy = new AuthorizationPolicyBuilder(IdentityConstants.ApplicationScheme).RequireAuthenticatedUser().Build();
 
         public AppPolicyProvider(IHttpContextAccessor httpContext)
         {
@@ -24,11 +29,11 @@ namespace MerendaIFCE.WebApp.Services
             AuthorizationPolicy policy;
             if (httpContext.HttpContext.Request.Path.StartsWithSegments("/api"))
             {
-                policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
+                policy = jwtPolicy;
             }
             else
             {
-                policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                policy = cookiePolicy;
             }
 
             return Task.FromResult(policy);
@@ -36,7 +41,13 @@ namespace MerendaIFCE.WebApp.Services
 
         public Task<AuthorizationPolicy> GetPolicyAsync(string policyName)
         {
-            throw new NotImplementedException();
+            switch (policyName)
+            {
+                case SignalRPolicyName:
+                    return Task.FromResult(jwtPolicy);
+                default:
+                    throw new InvalidOperationException($"Policy with name {policyName} does not exist");
+            }
         }
     }
 }

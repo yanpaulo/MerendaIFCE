@@ -1,4 +1,5 @@
 ﻿using MerendaIFCE.WebApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace MerendaIFCE.WebApp.Services
 {
+    [Authorize(AppPolicyProvider.SignalRPolicyName)]
     public class SyncHub : Hub
     {
         public const string InscricaoChanged = "InscricaoChanged";
