@@ -1,0 +1,57 @@
+﻿@page
+@model MerendaIFCE.WebApp.Pages.Confirmacoes.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Confirmacao[0].Mensagem)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Confirmacao[0].Cancela)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Confirmacao[0].Dia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Confirmacao[0].UltimaModificacao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Confirmacao[0].StatusConfirmacao)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Confirmacao) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mensagem)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cancela)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UltimaModificacao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusConfirmacao)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

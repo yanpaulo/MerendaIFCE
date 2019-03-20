@@ -1,0 +1,49 @@
+﻿@page
+@model MerendaIFCE.WebApp.Pages.Confirmacoes.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Confirmacao</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Confirmacao.Mensagem)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Confirmacao.Mensagem)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Confirmacao.Cancela)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Confirmacao.Cancela)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Confirmacao.Dia)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Confirmacao.Dia)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Confirmacao.UltimaModificacao)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Confirmacao.UltimaModificacao)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Confirmacao.StatusConfirmacao)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Confirmacao.StatusConfirmacao)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Confirmacao.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

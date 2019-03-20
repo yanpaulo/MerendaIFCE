@@ -1,0 +1,60 @@
+﻿@page
+@model MerendaIFCE.WebApp.Pages.Confirmacoes.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>Confirmacao</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Confirmacao.Mensagem" class="control-label"></label>
+                <input asp-for="Confirmacao.Mensagem" class="form-control" />
+                <span asp-validation-for="Confirmacao.Mensagem" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Confirmacao.Cancela" /> @Html.DisplayNameFor(model => model.Confirmacao.Cancela))
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Confirmacao.Dia" class="control-label"></label>
+                <input asp-for="Confirmacao.Dia" class="form-control" />
+                <span asp-validation-for="Confirmacao.Dia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Confirmacao.UltimaModificacao" class="control-label"></label>
+                <input asp-for="Confirmacao.UltimaModificacao" class="form-control" />
+                <span asp-validation-for="Confirmacao.UltimaModificacao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Confirmacao.StatusConfirmacao" class="control-label"></label>
+                <select asp-for="Confirmacao.StatusConfirmacao" class="form-control"></select>
+                <span asp-validation-for="Confirmacao.StatusConfirmacao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Confirmacao.InscricaoId" class="control-label"></label>
+                <select asp-for="Confirmacao.InscricaoId" class ="form-control" asp-items="ViewBag.InscricaoId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
