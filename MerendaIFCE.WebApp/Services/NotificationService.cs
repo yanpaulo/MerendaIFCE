@@ -16,6 +16,9 @@ namespace MerendaIFCE.WebApp.Services
                 @"Endpoint=sb://almocoifce.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=Kp8SOHS12E3eSFQswWE4O8aSkPdlWIMK7VJx43H37Dk=",
                 "AlmocoIFCE.NotificationHub");
         }
-        
+
+        public async Task<NotificationOutcome> NotificaStatusRefeicaoAsync() =>
+            await Hub.SendTemplateNotificationAsync(new Dictionary<string, string> { { "message", "O status da sua refeição foi alterado." } });
+
     }
 }

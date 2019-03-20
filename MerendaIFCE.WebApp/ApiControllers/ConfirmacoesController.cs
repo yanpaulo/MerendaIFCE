@@ -51,7 +51,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
             foreach (var item in confirmacoes)
             {
                 var inscricao = db.Inscricoes.Single(i => i.Id == item.InscricaoId);
-                await notification.Hub.SendTemplateNotificationAsync(new Dictionary<string, string> { { "message", "O status da sua refeição foi alterado." } });
+                await notification.NotificaStatusRefeicaoAsync();
 
                 item.UltimaModificacao = now;
             }
