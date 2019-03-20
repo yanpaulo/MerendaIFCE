@@ -18,14 +18,14 @@ namespace MerendaIFCE.WebApp.ApiControllers
     public class InscricoesController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IHubContext<SyncHub> _hubContext;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SyncHubService _hubService;
 
-        public InscricoesController(ApplicationDbContext context, IHubContext<SyncHub> hubContext, UserManager<ApplicationUser> userManager)
+        public InscricoesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SyncHubService hubService)
         {
             _context = context;
-            _hubContext = hubContext;
-            this.userManager = userManager;
+            _userManager = userManager;
+            _hubService = hubService;
         }
 
         // GET: api/Inscricoes
@@ -62,8 +62,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                     _context.InscricaoDias.Add(dia);
                     _context.SaveChanges();
 
-
-                    await HubSend(SyncHub.InscricaoChanged, user.Inscricao);
+                    await _hubService.NotificaInscricaoAlteradaAsync(user.Inscricao);
 
                     return Created($"{inscricao.Id}/Dias/{dia.Id}", dia);
                 }
@@ -93,7 +92,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                     _context.InscricaoDias.Remove(user.Inscricao.Dias.Single(d => d.Id == idDia));
                     _context.SaveChanges();
 
-                    await HubSend(SyncHub.InscricaoChanged, user.Inscricao);
+                    await _hubService.NotificaInscricaoAlteradaAsync(user.Inscricao);
                 }
 
                 return Ok();
@@ -140,7 +139,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
                     confirmacao.UltimaModificacao = DateTimeOffset.Now;
                     _context.SaveChanges();
 
-                    await HubSend(SyncHub.ConfirmacaoChanged, confirmacao);
+                    await _hubService.NotificaConfirmacaoAlteradaAsync(confirmacao);
                     return Ok(confirmacao);
                 }
                 else
@@ -203,7 +202,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
 
             await _context.SaveChangesAsync();
-            await HubSend(SyncHub.InscricaoChanged, inscricao);
+            await _hubService.NotificaInscricaoAlteradaAsync(inscricao);
 
             return NoContent();
         }
@@ -226,7 +225,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
 
             _context.Inscricoes.Add(inscricao);
             await _context.SaveChangesAsync();
-            await HubSend(SyncHub.InscricaoChanged, inscricao);
+            await _hubService.NotificaInscricaoAlteradaAsync(inscricao);
 
             return CreatedAtAction("GetInscricao", new { id = inscricao.Id }, inscricao);
         }
@@ -254,12 +253,7 @@ namespace MerendaIFCE.WebApp.ApiControllers
         }
 
         #endregion
-
-        private async Task HubSend(string method, object arg)
-        {
-            await _hubContext.Clients.Group(Constants.SyncRole).SendAsync(method, arg);
-        }
-
+        
         private bool InscricaoExists(int id)
         {
             return _context.Inscricoes.Any(e => e.Id == id);

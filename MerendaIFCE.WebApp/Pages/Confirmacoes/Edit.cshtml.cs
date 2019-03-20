@@ -16,13 +16,13 @@ namespace MerendaIFCE.WebApp.Pages.Confirmacoes
     {
         private readonly ApplicationDbContext _context;
         private readonly NotificationService _notificationService;
-        private readonly IHubContext<SyncHub> _hubContext;
+        private readonly SyncHubService _hubService;
 
-        public EditModel(ApplicationDbContext context, NotificationService notificationService, IHubContext<SyncHub> hubContext)
+        public EditModel(ApplicationDbContext context, NotificationService notificationService, SyncHubService hubService)
         {
             _context = context;
             _notificationService = notificationService;
-            _hubContext = hubContext;
+            _hubService = hubService;
         }
 
         [BindProperty]
@@ -62,7 +62,7 @@ namespace MerendaIFCE.WebApp.Pages.Confirmacoes
 
                 Confirmacao = (Confirmacao)_context.Entry(Confirmacao).GetDatabaseValues().ToObject();
                 await _notificationService.NotificaStatusRefeicaoAsync();
-                await _hubContext.Clients.Group(Constants.SyncRole).SendAsync(SyncHub.ConfirmacaoChanged, Confirmacao);
+                await _hubService.NotificaConfirmacaoAlteradaAsync(Confirmacao);
             }
             catch (DbUpdateConcurrencyException)
             {

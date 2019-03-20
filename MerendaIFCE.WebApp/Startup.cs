@@ -49,6 +49,7 @@ namespace MerendaIFCE.WebApp
             });
 
             services.AddSingleton<NotificationService>();
+            services.AddSingleton<SyncHubService>();
             services.AddSingleton<TokenService>();
             services.AddSingleton<IAuthorizationPolicyProvider, AppPolicyProvider>();
             
