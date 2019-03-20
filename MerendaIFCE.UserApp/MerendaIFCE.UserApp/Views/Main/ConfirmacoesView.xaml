@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:m="clr-namespace:MerendaIFCE.UserApp.Models"
              x:Class="MerendaIFCE.UserApp.Views.Main.ConfirmacoesView"
              Title="Confirmações"
              Appearing="ContentPage_Appearing"
@@ -37,13 +38,15 @@
             <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Hoje.Mensagem}" IsVisible="{Binding Hoje.Mensagem,Converter={StaticResource NullCheckValueConverter}}"></Label>
             
             <Label Grid.Row="2" Grid.Column="0" Text="Você vai almoçar hoje?"></Label>
-            <Switch Grid.Row="2" Grid.Column="1" IsToggled="{Binding Hoje.Cancela,Converter={StaticResource NegatedValueConverter}}" Toggled="CancelaSwitch_Toggled"></Switch>
+            <Switch Grid.Row="2" Grid.Column="1" Toggled="CancelaSwitch_Toggled"
+                    IsEnabled="{Binding Hoje.StatusConfirmacao,Converter={StaticResource EqualsValueConverter},ConverterParameter={x:Static m:StatusConfirmacao.NaoConfirmado}}"
+                    IsToggled="{Binding Hoje.Cancela,Converter={StaticResource NegatedValueConverter}}"></Switch>
         </Grid>
 
-        <ListView Grid.Row="2" Margin="12" ItemsSource="{Binding Confirmacoes}" IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding RefreshCommand}">
+        <ListView Grid.Row="2" Margin="8" ItemsSource="{Binding Confirmacoes}" IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding RefreshCommand}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Dia,StringFormat='{0:d}'}" Detail="{Binding Mensagem}"></TextCell>
+                    <TextCell TextColor="{StaticResource Accent}" DetailColor="{StaticResource NavigationPrimary}" Text="{Binding Dia,StringFormat='{0:dd/MM/yyyy}'}" Detail="{Binding Mensagem}"></TextCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
